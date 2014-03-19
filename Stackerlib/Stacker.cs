@@ -312,9 +312,7 @@ namespace Stackerlib
                         ncell++;
                         if (Array.BinarySearch<int>(fCellsNextPass, ncell) > -1) 
                             passcell = true;
-                    }
-                    
-                    
+                    }                                      
                     
                 }
             }
@@ -322,6 +320,8 @@ namespace Stackerlib
             maxcell = ncell - 1;
         }
         private int maxcell;
+
+        public int MaxCell { get { return maxcell; } }
         // изменить цвет квадратика
         public void TriggerStacker(Boolean mode)
         {

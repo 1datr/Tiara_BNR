@@ -11,6 +11,8 @@ namespace Stackerlib
 {
     public delegate String OnGetCmdCaption(int cmd, int op1, int op2);
     public delegate void CmdManagerEvent(String cmdstr, int op1, int op2);
+    public delegate void OnStopEvent();
+    public delegate void OnUnStopEvent();
 
     public partial class CmdManager : UserControl
     {
@@ -29,6 +31,8 @@ namespace Stackerlib
                 {
                     if (this.OnGetReady_hndlr(CmdList[currCmdPtr].cmd, CmdList[currCmdPtr].op1, CmdList[currCmdPtr].op2))
                     {
+                        working = true;
+                        stoped = false;
                         this.OnExe_hndlr(CmdList[currCmdPtr].cmd, CmdList[currCmdPtr].op1, CmdList[currCmdPtr].op2);
 
                         String cmdcapt = "";
@@ -42,17 +46,25 @@ namespace Stackerlib
             }
         }
 
+        public void Resume()
+        {
+            ExeCmd();
+        }
+
         private List<StackerCmd> CmdList; // список команд
         private int currCmdPtr = 0; // Индекс текущей выполняемой команды
 
         public void EndCommand()
         {
+            if(!stoped)
             if (CmdList.Count-1 >= currCmdPtr)
             {
                 CmdList.RemoveAt(currCmdPtr);
+                working = false;
                 this.Refresh();
-                this.ExeCmd();
+                               
             }
+            this.ExeCmd(); 
         }
 
         public void AddCommand(int cmd, int op1=-1, int op2=-1)
@@ -177,6 +189,24 @@ namespace Stackerlib
             remove { lock (this) { OnDeleteCommand_hndlr -= value; } }
         }
 
+        private OnStopEvent OnStopEvent_hndlr;
+        [DisplayName("При остановке штабелера")]
+        [Description("Событие при команде остановить штабелер")]
+        public event OnStopEvent OnStopEvent
+        {
+            add { lock (this) { OnStopEvent_hndlr += value; } }
+            remove { lock (this) { OnStopEvent_hndlr -= value; } }
+        }
+
+        private OnUnStopEvent OnUnStopEvent_hndlr;
+        [DisplayName("При возобновлении работы штабелера")]
+        [Description("Событие при команде возобновить работу штабелера")]
+        public event OnUnStopEvent OnUnStopEvent
+        {
+            add { lock (this) { OnUnStopEvent_hndlr += value; } }
+            remove { lock (this) { OnUnStopEvent_hndlr -= value; } }
+        }
+
         private void dgvCmdlist_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 4)
@@ -197,6 +227,35 @@ namespace Stackerlib
                     return CmdList[currCmdPtr];
                 return null;
             }
+        }
+
+        private bool stoped = false;
+        private bool working = false;
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!stoped)
+            {
+                btnStop.Text = "Возобновить";
+                if (this.OnStopEvent_hndlr != null)
+                {
+                    
+                    OnStopEvent_hndlr();
+                }
+                stoped = true;
+                working = false;
+            }
+            else
+            {
+                btnStop.Text = "Стоп";
+                if (this.OnUnStopEvent_hndlr != null)
+                {
+                    
+                    OnUnStopEvent_hndlr();
+                }
+                //stoped = false;
+                //ExeCmd();
+            }
+            Refresh();
         }
             
     }

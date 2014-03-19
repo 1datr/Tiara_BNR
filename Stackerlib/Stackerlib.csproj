@@ -69,6 +69,12 @@
     <Compile Include="PropGridViewer.Designer.cs">
       <DependentUpon>PropGridViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Satckerman.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Satckerman.designer.cs">
+      <DependentUpon>Satckerman.cs</DependentUpon>
+    </Compile>
     <Compile Include="Stacker.cs">
       <SubType>UserControl</SubType>
     </Compile>

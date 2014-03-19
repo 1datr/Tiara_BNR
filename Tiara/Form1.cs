@@ -158,6 +158,8 @@ namespace Tiara
         private bool power = false;
         private int mode = 0;
         private bool vch_first = true;
+        private bool cell_test_mode = false;
+        private bool autokvit = false;
 
         private void ValueChanged(object sender, VariableEventArgs e)
         {
@@ -179,7 +181,11 @@ namespace Tiara
                                 break;
                             case 1: tsl_error.Text = "Штабелер находиться в состоянии выполнения команды"; break;
                             case 2: tsl_error.Text = "Штабелер не готов выполненять команду"; break;
-                            default: tsl_error.Text = "Ошибка " + status.ToString() + ". " + stacker_error_text(status); break;
+                            default:
+                                {
+                                    tsl_error.Text = "Ошибка " + status.ToString() + ". " + stacker_error_text(status); break;
+                                    
+                                }
                         }
                         LogMes(tsl_error.Text);
                         if (gb_commands.Enabled)
@@ -192,7 +198,7 @@ namespace Tiara
                     break;
                 case "gOPC.Output.Mode":
                         mode = Convert.ToInt32(VarVal("gOPC.Output.Mode").ToString());
-                        gb_commands.Enabled = (mode != 0);
+                        gb_commands.Enabled = (mode == 0);
                         String[] mode_capts = { "ПА", "наладка/шаговый", "наладка/ручной" };
                         lblMode.Text = mode_capts[mode];
                         LogMes(mode_capts[mode]);             
@@ -852,11 +858,14 @@ namespace Tiara
             vncform.Show();
         }
 
-        
+        private void Kvit()
+        {
+            Varlist["gOPC.Input.ack"].Value = true;
+        }
 
         private void button6_Click_2(object sender, EventArgs e)
         {
-            Varlist["gOPC.Input.ack"].Value = true;
+            Kvit();
         }
 
         private void button8_Click_1(object sender, EventArgs e)
@@ -1329,6 +1338,61 @@ namespace Tiara
         private void productsBindingSource1_CurrentChanged_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            this.cell_test_mode = true;
+
+            cmdManager1.AddCommand(1, 1);
+            for (int c = 0; c <= stacker1.MaxCell; c++)
+            {
+                
+                    
+                    cmdManager1.AddCommand(2, -1, c);
+                    cmdManager1.AddCommand(1, c);
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            this.cell_test_mode = false;
+            
+        }
+
+        private void cmdManager1_OnStopEvent()
+        {
+            if (Varlist["gOPC.Input.power"].Value == false)
+            {
+                Varlist["gOPC.Input.power"].Value = true;
+                System.Threading.Thread.Sleep(1000);
+                Varlist["gOPC.Input.power"].Value = false;
+            }
+            else
+                Varlist["gOPC.Input.power"].Value = false;
+        }
+
+        private void cmdManager1_OnUnStopEvent()
+        {
+            // включить
+            if (Varlist["gOPC.Input.power"].Value == true)
+            {
+                Varlist["gOPC.Input.power"].Value = false;
+                System.Threading.Thread.Sleep(1000);
+                Varlist["gOPC.Input.power"].Value = true;
+            }
+            else
+                Varlist["gOPC.Input.power"].Value = true;
+
+
+            // квитировать
+                Kvit();
+
+        }
+
+        private void button11_Click_1(object sender, EventArgs e)
+        {
+            coordsTableAdapter.Update(this.dbTiaraDataSet3);
         }
     }
 }

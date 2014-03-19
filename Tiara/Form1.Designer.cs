@@ -146,6 +146,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.dgvMod8 = new System.Windows.Forms.DataGridView();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.button11 = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.coordsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label19 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
@@ -154,10 +157,8 @@
             this.cellidDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.countDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.changedDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.productidDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.productidDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.productsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProductsDataSet = new Tiara.dbTiaraDataSet1();
             this.productsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.productsTableAdapter1 = new Tiara.dbTiaraDataSet1TableAdapters.productsTableAdapter();
@@ -171,10 +172,15 @@
             this.drive_errorsTableAdapter = new Tiara.dbTiaraDataSetTableAdapters.drive_errorsTableAdapter();
             this.stackererrorsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.stacker_errorsTableAdapter = new Tiara.dbTiaraDataSetTableAdapters.stacker_errorsTableAdapter();
-            this.coordsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.coordsTableAdapter = new Tiara.dbTiaraDataSet3TableAdapters.coordsTableAdapter();
             this.productsTableAdapter2 = new Tiara.dbTiaraDataSet2TableAdapters.productsTableAdapter();
             this.productsBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
+            this.idDataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ncellDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.zDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -216,9 +222,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvMod9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMod8)).BeginInit();
             this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProductsDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet2)).BeginInit();
@@ -227,7 +234,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bsFind)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.driveerrorsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stackererrorsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -932,9 +938,9 @@
             this.cmdManager1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.cmdManager1.AutoSize = true;
-            this.cmdManager1.Location = new System.Drawing.Point(159, 35);
+            this.cmdManager1.Location = new System.Drawing.Point(153, 39);
             this.cmdManager1.Name = "cmdManager1";
-            this.cmdManager1.Size = new System.Drawing.Size(232, 215);
+            this.cmdManager1.Size = new System.Drawing.Size(234, 214);
             this.cmdManager1.TabIndex = 14;
             this.cmdManager1.OnGetReady += new Stackerlib.OnGetReady(this.cmdManager1_OnGetReady);
             this.cmdManager1.OnExe += new Stackerlib.OnExe(this.cmdManager1_OnExe);
@@ -942,6 +948,8 @@
             this.cmdManager1.OnAddCommand += new Stackerlib.CmdManagerEvent(this.cmdManager1_OnAddCommand);
             this.cmdManager1.OnExeCommand += new Stackerlib.CmdManagerEvent(this.cmdManager1_OnExeCommand);
             this.cmdManager1.OnDeleteCommand += new Stackerlib.CmdManagerEvent(this.cmdManager1_OnDeleteCommand);
+            this.cmdManager1.OnStopEvent += new Stackerlib.OnStopEvent(this.cmdManager1_OnStopEvent);
+            this.cmdManager1.OnUnStopEvent += new Stackerlib.OnUnStopEvent(this.cmdManager1_OnUnStopEvent);
             // 
             // label17
             // 
@@ -1205,6 +1213,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Controls.Add(this.tabPage7);
+            this.tabControl2.Controls.Add(this.tabPage8);
             this.tabControl2.Location = new System.Drawing.Point(8, 6);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
@@ -1417,10 +1426,11 @@
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.button11);
+            this.tabPage7.Controls.Add(this.dataGridView1);
             this.tabPage7.Controls.Add(this.label19);
             this.tabPage7.Controls.Add(this.button10);
             this.tabPage7.Controls.Add(this.dataGridView3);
-            this.tabPage7.Controls.Add(this.dataGridView1);
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
@@ -1429,6 +1439,38 @@
             this.tabPage7.Text = "Ячейки";
             this.tabPage7.UseVisualStyleBackColor = true;
             this.tabPage7.Enter += new System.EventHandler(this.tabPage7_Enter);
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(25, 486);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(132, 23);
+            this.button11.TabIndex = 5;
+            this.button11.Text = "Сохранить";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click_1);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.idDataGridViewTextBoxColumn4,
+            this.ncellDataGridViewTextBoxColumn,
+            this.xDataGridViewTextBoxColumn,
+            this.yDataGridViewTextBoxColumn,
+            this.zDataGridViewTextBoxColumn});
+            this.dataGridView1.DataSource = this.coordsBindingSource;
+            this.dataGridView1.Location = new System.Drawing.Point(25, 35);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(357, 445);
+            this.dataGridView1.TabIndex = 4;
+            // 
+            // coordsBindingSource
+            // 
+            this.coordsBindingSource.DataMember = "coords";
+            this.coordsBindingSource.DataSource = this.dbTiaraDataSet3;
+            this.coordsBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.coordsBindingSource_ListChanged);
             // 
             // label19
             // 
@@ -1441,7 +1483,7 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(546, 319);
+            this.button10.Location = new System.Drawing.Point(502, 486);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(153, 23);
             this.button10.TabIndex = 2;
@@ -1461,47 +1503,55 @@
             this.changedDataGridViewTextBoxColumn2,
             this.productidDataGridViewTextBoxColumn2});
             this.dataGridView3.DataSource = this.productsBindingSource1;
-            this.dataGridView3.Location = new System.Drawing.Point(545, 45);
+            this.dataGridView3.Location = new System.Drawing.Point(502, 35);
             this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.Size = new System.Drawing.Size(645, 256);
+            this.dataGridView3.Size = new System.Drawing.Size(765, 445);
             this.dataGridView3.TabIndex = 1;
             // 
             // idDataGridViewTextBoxColumn3
             // 
             this.idDataGridViewTextBoxColumn3.DataPropertyName = "id";
-            this.idDataGridViewTextBoxColumn3.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn3.HeaderText = "№";
             this.idDataGridViewTextBoxColumn3.Name = "idDataGridViewTextBoxColumn3";
             this.idDataGridViewTextBoxColumn3.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn3.Width = 50;
             // 
             // stackeridDataGridViewTextBoxColumn2
             // 
             this.stackeridDataGridViewTextBoxColumn2.DataPropertyName = "stacker_id";
-            this.stackeridDataGridViewTextBoxColumn2.HeaderText = "stacker_id";
+            this.stackeridDataGridViewTextBoxColumn2.HeaderText = "Штабелер";
             this.stackeridDataGridViewTextBoxColumn2.Name = "stackeridDataGridViewTextBoxColumn2";
+            this.stackeridDataGridViewTextBoxColumn2.Width = 70;
             // 
             // cellidDataGridViewTextBoxColumn2
             // 
             this.cellidDataGridViewTextBoxColumn2.DataPropertyName = "cell_id";
-            this.cellidDataGridViewTextBoxColumn2.HeaderText = "cell_id";
+            this.cellidDataGridViewTextBoxColumn2.HeaderText = "Ячейка";
             this.cellidDataGridViewTextBoxColumn2.Name = "cellidDataGridViewTextBoxColumn2";
             // 
             // countDataGridViewTextBoxColumn2
             // 
             this.countDataGridViewTextBoxColumn2.DataPropertyName = "count";
-            this.countDataGridViewTextBoxColumn2.HeaderText = "count";
+            this.countDataGridViewTextBoxColumn2.HeaderText = "Количество";
             this.countDataGridViewTextBoxColumn2.Name = "countDataGridViewTextBoxColumn2";
             // 
             // changedDataGridViewTextBoxColumn2
             // 
             this.changedDataGridViewTextBoxColumn2.DataPropertyName = "changed";
-            this.changedDataGridViewTextBoxColumn2.HeaderText = "changed";
+            this.changedDataGridViewTextBoxColumn2.HeaderText = "Изменено";
             this.changedDataGridViewTextBoxColumn2.Name = "changedDataGridViewTextBoxColumn2";
             // 
             // productidDataGridViewTextBoxColumn2
             // 
             this.productidDataGridViewTextBoxColumn2.DataPropertyName = "product_id";
-            this.productidDataGridViewTextBoxColumn2.HeaderText = "product_id";
+            this.productidDataGridViewTextBoxColumn2.DataSource = this.productlistBindingSource1;
+            this.productidDataGridViewTextBoxColumn2.DisplayMember = "name";
+            this.productidDataGridViewTextBoxColumn2.HeaderText = "Продукт";
             this.productidDataGridViewTextBoxColumn2.Name = "productidDataGridViewTextBoxColumn2";
+            this.productidDataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.productidDataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.productidDataGridViewTextBoxColumn2.ValueMember = "id";
+            this.productidDataGridViewTextBoxColumn2.Width = 300;
             // 
             // productsBindingSource1
             // 
@@ -1509,21 +1559,6 @@
             this.productsBindingSource1.DataSource = this.dbTiaraDataSet;
             this.productsBindingSource1.CurrentChanged += new System.EventHandler(this.productsBindingSource1_CurrentChanged_1);
             this.productsBindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.productsBindingSource1_ListChanged_1);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column4});
-            this.dataGridView1.Location = new System.Drawing.Point(20, 19);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(145, 369);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Список ячеек";
-            this.Column4.Name = "Column4";
             // 
             // ProductsDataSet
             // 
@@ -1585,12 +1620,6 @@
             // 
             this.stacker_errorsTableAdapter.ClearBeforeFill = true;
             // 
-            // coordsBindingSource
-            // 
-            this.coordsBindingSource.DataMember = "coords";
-            this.coordsBindingSource.DataSource = this.dbTiaraDataSet3;
-            this.coordsBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.coordsBindingSource_ListChanged);
-            // 
             // coordsTableAdapter
             // 
             this.coordsTableAdapter.ClearBeforeFill = true;
@@ -1603,6 +1632,57 @@
             // 
             this.productsBindingSource2.DataMember = "products";
             this.productsBindingSource2.DataSource = this.dbTiaraDataSet;
+            // 
+            // idDataGridViewTextBoxColumn4
+            // 
+            this.idDataGridViewTextBoxColumn4.DataPropertyName = "id";
+            this.idDataGridViewTextBoxColumn4.Frozen = true;
+            this.idDataGridViewTextBoxColumn4.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn4.Name = "idDataGridViewTextBoxColumn4";
+            this.idDataGridViewTextBoxColumn4.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.idDataGridViewTextBoxColumn4.Width = 50;
+            // 
+            // ncellDataGridViewTextBoxColumn
+            // 
+            this.ncellDataGridViewTextBoxColumn.DataPropertyName = "ncell";
+            this.ncellDataGridViewTextBoxColumn.Frozen = true;
+            this.ncellDataGridViewTextBoxColumn.HeaderText = "Ячейка";
+            this.ncellDataGridViewTextBoxColumn.Name = "ncellDataGridViewTextBoxColumn";
+            this.ncellDataGridViewTextBoxColumn.ReadOnly = true;
+            this.ncellDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ncellDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // xDataGridViewTextBoxColumn
+            // 
+            this.xDataGridViewTextBoxColumn.DataPropertyName = "x";
+            this.xDataGridViewTextBoxColumn.HeaderText = "x";
+            this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
+            this.xDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // yDataGridViewTextBoxColumn
+            // 
+            this.yDataGridViewTextBoxColumn.DataPropertyName = "y";
+            this.yDataGridViewTextBoxColumn.HeaderText = "y";
+            this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
+            this.yDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // zDataGridViewTextBoxColumn
+            // 
+            this.zDataGridViewTextBoxColumn.DataPropertyName = "z";
+            this.zDataGridViewTextBoxColumn.HeaderText = "z";
+            this.zDataGridViewTextBoxColumn.Name = "zDataGridViewTextBoxColumn";
+            this.zDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(1323, 555);
+            this.tabPage8.TabIndex = 2;
+            this.tabPage8.Text = "Тесты";
+            this.tabPage8.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1664,9 +1744,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvMod8)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProductsDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet2)).EndInit();
@@ -1675,7 +1756,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bsFind)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.driveerrorsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.stackererrorsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1812,20 +1892,26 @@
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage7;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.BindingSource productsBindingSource1;
         private dbTiaraDataSet2TableAdapters.productsTableAdapter productsTableAdapter2;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.BindingSource productsBindingSource2;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn stackeridDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn cellidDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn changedDataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn productidDataGridViewTextBoxColumn2;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.BindingSource productsBindingSource2;
+        private System.Windows.Forms.DataGridViewComboBoxColumn productidDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ncellDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn xDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn zDataGridViewTextBoxColumn;
+        private System.Windows.Forms.TabPage tabPage8;
     }
 }
 
