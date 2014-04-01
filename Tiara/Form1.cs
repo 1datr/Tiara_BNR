@@ -579,14 +579,14 @@ namespace Tiara
         {
             this.tabChoosenCell.Text = "Ячейка " + cellno.ToString();
             bsProductlist.Filter = "stacker_id=1 AND cell_id="+cellno;
-            addDetailGroup.Enabled = (stacker1.is_input(cellno));
+            addDetailGroup.Enabled = (stacker1.is_input(cellno)) || TEmode;
             //sqdt_productlist.Update();
             //productsBindingSource.ResumeBinding();
           //  productsBindingSource1.Filter = "cell_id = " + cellno;
           
             //dgvProdList.ReadOnly = !(stacker1.is_poddon(cellno));
-            dgvProdList.Columns[1].Visible = (stacker1.is_input(cellno));
-            dgvProdList.Columns[2].Visible = (stacker1.is_poddon(cellno));
+            dgvProdList.Columns[1].Visible = (stacker1.is_input(cellno) || TEmode);
+            dgvProdList.Columns[2].Visible = (stacker1.is_poddon(cellno) || TEmode);
 
             tabCellinfo.SelectedIndex = 0;
             //productsBindingSource1.
@@ -965,23 +965,31 @@ namespace Tiara
         }
 
         private void out_cpu_state()
-        { 
-            //CpuState.Offline
-            switch (cpu.State) 
-            {
-              /*  case CpuState.Boot:
-                    lblCPUStatus.Text = "Boot";
-                    break;*/
-                case CpuState.Service:
-                    lblCPUStatus.Text = "Service";
-                    break;
-                case CpuState.Run:
-                    lblCPUStatus.Text = "Run";
-                    break;
-                default:
-                    lblCPUStatus.Text = "Unknown";
-                    break;
-            }
+        {
+            
+                //CpuState.Offline
+                switch (cpu.State)
+                {
+                    /*  case CpuState.Boot:
+                          lblCPUStatus.Text = "Boot";
+                          break;*/
+                    case CpuState.Service:
+                        lblCPUStatus.Text = "Service";
+                        break;
+                    case CpuState.Run:
+                        lblCPUStatus.Text = "Run";
+                        break;
+                    default:
+                        try
+                        {
+                            lblCPUStatus.Text = "Unknown";
+                        }
+                        catch (System.StackOverflowException ex)
+                        {
+                        }
+                        break;
+                }
+            
         }
 
         private void dgvMod9_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1393,6 +1401,28 @@ namespace Tiara
         private void button11_Click_1(object sender, EventArgs e)
         {
             coordsTableAdapter.Update(this.dbTiaraDataSet3);
+        }
+
+        private bool TEmode = false;
+
+        private void btnTE_Click(object sender, EventArgs e)
+        {
+            if (!TEmode)
+            {
+                frmAuthSpec auth = new frmAuthSpec();
+                if (auth.ShowDialog() != DialogResult.OK)
+                {
+                    TEmode = true;
+                    btnTE.Text = "Обычное редактирование";
+                    stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+                }
+            }
+            else
+            {
+                TEmode = false;
+                btnTE.Text = "Тотальное редактирование";
+                stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+            }
         }
     }
 }

@@ -148,6 +148,11 @@
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.button11 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.idDataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ncellDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.zDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.coordsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label19 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
@@ -159,6 +164,7 @@
             this.changedDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.productidDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.productsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.tabPage8 = new System.Windows.Forms.TabPage();
             this.ProductsDataSet = new Tiara.dbTiaraDataSet1();
             this.productsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.productsTableAdapter1 = new Tiara.dbTiaraDataSet1TableAdapters.productsTableAdapter();
@@ -175,12 +181,7 @@
             this.coordsTableAdapter = new Tiara.dbTiaraDataSet3TableAdapters.coordsTableAdapter();
             this.productsTableAdapter2 = new Tiara.dbTiaraDataSet2TableAdapters.productsTableAdapter();
             this.productsBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
-            this.idDataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ncellDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.zDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.btnTE = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -280,6 +281,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnTE);
             this.groupBox3.Controls.Add(this.lblCapt5);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.label14);
@@ -1466,6 +1468,47 @@
             this.dataGridView1.Size = new System.Drawing.Size(357, 445);
             this.dataGridView1.TabIndex = 4;
             // 
+            // idDataGridViewTextBoxColumn4
+            // 
+            this.idDataGridViewTextBoxColumn4.DataPropertyName = "id";
+            this.idDataGridViewTextBoxColumn4.Frozen = true;
+            this.idDataGridViewTextBoxColumn4.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn4.Name = "idDataGridViewTextBoxColumn4";
+            this.idDataGridViewTextBoxColumn4.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.idDataGridViewTextBoxColumn4.Width = 50;
+            // 
+            // ncellDataGridViewTextBoxColumn
+            // 
+            this.ncellDataGridViewTextBoxColumn.DataPropertyName = "ncell";
+            this.ncellDataGridViewTextBoxColumn.Frozen = true;
+            this.ncellDataGridViewTextBoxColumn.HeaderText = "Ячейка";
+            this.ncellDataGridViewTextBoxColumn.Name = "ncellDataGridViewTextBoxColumn";
+            this.ncellDataGridViewTextBoxColumn.ReadOnly = true;
+            this.ncellDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ncellDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // xDataGridViewTextBoxColumn
+            // 
+            this.xDataGridViewTextBoxColumn.DataPropertyName = "x";
+            this.xDataGridViewTextBoxColumn.HeaderText = "x";
+            this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
+            this.xDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // yDataGridViewTextBoxColumn
+            // 
+            this.yDataGridViewTextBoxColumn.DataPropertyName = "y";
+            this.yDataGridViewTextBoxColumn.HeaderText = "y";
+            this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
+            this.yDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // zDataGridViewTextBoxColumn
+            // 
+            this.zDataGridViewTextBoxColumn.DataPropertyName = "z";
+            this.zDataGridViewTextBoxColumn.HeaderText = "z";
+            this.zDataGridViewTextBoxColumn.Name = "zDataGridViewTextBoxColumn";
+            this.zDataGridViewTextBoxColumn.Width = 60;
+            // 
             // coordsBindingSource
             // 
             this.coordsBindingSource.DataMember = "coords";
@@ -1560,6 +1603,16 @@
             this.productsBindingSource1.CurrentChanged += new System.EventHandler(this.productsBindingSource1_CurrentChanged_1);
             this.productsBindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.productsBindingSource1_ListChanged_1);
             // 
+            // tabPage8
+            // 
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(1323, 555);
+            this.tabPage8.TabIndex = 2;
+            this.tabPage8.Text = "Тесты";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
             // ProductsDataSet
             // 
             this.ProductsDataSet.DataSetName = "dsProducts";
@@ -1633,56 +1686,15 @@
             this.productsBindingSource2.DataMember = "products";
             this.productsBindingSource2.DataSource = this.dbTiaraDataSet;
             // 
-            // idDataGridViewTextBoxColumn4
+            // btnTE
             // 
-            this.idDataGridViewTextBoxColumn4.DataPropertyName = "id";
-            this.idDataGridViewTextBoxColumn4.Frozen = true;
-            this.idDataGridViewTextBoxColumn4.HeaderText = "id";
-            this.idDataGridViewTextBoxColumn4.Name = "idDataGridViewTextBoxColumn4";
-            this.idDataGridViewTextBoxColumn4.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.idDataGridViewTextBoxColumn4.Width = 50;
-            // 
-            // ncellDataGridViewTextBoxColumn
-            // 
-            this.ncellDataGridViewTextBoxColumn.DataPropertyName = "ncell";
-            this.ncellDataGridViewTextBoxColumn.Frozen = true;
-            this.ncellDataGridViewTextBoxColumn.HeaderText = "Ячейка";
-            this.ncellDataGridViewTextBoxColumn.Name = "ncellDataGridViewTextBoxColumn";
-            this.ncellDataGridViewTextBoxColumn.ReadOnly = true;
-            this.ncellDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ncellDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // xDataGridViewTextBoxColumn
-            // 
-            this.xDataGridViewTextBoxColumn.DataPropertyName = "x";
-            this.xDataGridViewTextBoxColumn.HeaderText = "x";
-            this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
-            this.xDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // yDataGridViewTextBoxColumn
-            // 
-            this.yDataGridViewTextBoxColumn.DataPropertyName = "y";
-            this.yDataGridViewTextBoxColumn.HeaderText = "y";
-            this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
-            this.yDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // zDataGridViewTextBoxColumn
-            // 
-            this.zDataGridViewTextBoxColumn.DataPropertyName = "z";
-            this.zDataGridViewTextBoxColumn.HeaderText = "z";
-            this.zDataGridViewTextBoxColumn.Name = "zDataGridViewTextBoxColumn";
-            this.zDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // tabPage8
-            // 
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(1323, 555);
-            this.tabPage8.TabIndex = 2;
-            this.tabPage8.Text = "Тесты";
-            this.tabPage8.UseVisualStyleBackColor = true;
+            this.btnTE.Location = new System.Drawing.Point(165, 289);
+            this.btnTE.Name = "btnTE";
+            this.btnTE.Size = new System.Drawing.Size(160, 23);
+            this.btnTE.TabIndex = 19;
+            this.btnTE.Text = "Тотальное редактирование";
+            this.btnTE.UseVisualStyleBackColor = true;
+            this.btnTE.Click += new System.EventHandler(this.btnTE_Click);
             // 
             // Form1
             // 
@@ -1912,6 +1924,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn zDataGridViewTextBoxColumn;
         private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.Button btnTE;
     }
 }
 
