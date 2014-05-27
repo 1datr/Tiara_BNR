@@ -64,8 +64,8 @@ namespace Tiara
             cpu.Connection.DeviceType = DeviceType.TcpIp;
          /*   cpu.Connection.TcpIp.DestinationIpAddress = "127.0.0.1";
             cpu.Connection.TcpIp.DestinationPort = 11160;*/
-            cpu.Connection.TcpIp.DestinationIpAddress = ConfigurationManager.AppSettings["PLC_IP"];
-            cpu.Connection.TcpIp.DestinationPort = short.Parse(ConfigurationManager.AppSettings["PLC_PORT"]);
+            cpu.Connection.TcpIp.DestinationIpAddress = ConfigurationManager.AppSettings["PLC_IP_1"];
+            cpu.Connection.TcpIp.DestinationPort = short.Parse(ConfigurationManager.AppSettings["PLC_PORT_1"]);
             /*
             cpu.Connection.TcpIp.DestinationIpAddress = "192.168.1.200";
             cpu.Connection.TcpIp.DestinationPort = 11159;*/
@@ -553,6 +553,18 @@ namespace Tiara
             
             CurrCmd = new Command();
             Connect_Service("serv1");
+        }
+
+        private void LogMes(String mes)
+        {/*
+            using (System.IO.StreamWriter w = System.IO.File.AppendText(
+        System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) + "\\" + f_logpath))
+            {
+                w.WriteLine("--------------------");
+                w.WriteLine(DateTime.Now);
+                w.WriteLine(mes);
+                w.Close();
+            }*/
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -1052,23 +1064,11 @@ namespace Tiara
             Trans();
         }
 
-        private void LogMes(String mes)
-        {
-        using (System.IO.StreamWriter w = System.IO.File.AppendText(
-    System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) +
-    "\\tiara.log"))
-  {
-    w.WriteLine("--------------------");
-    w.WriteLine(DateTime.Now);
-    w.WriteLine(mes);
-    w.Close();
-  }
-}
-
+ 
         private void dgvProdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-          //  int currentRow = int.Parse(e.RowIndex.ToString());
-            if (!stacker1.is_poddon(stacker1.SelectedCellNumber)) return;
+            
+            if (!stacker1.is_poddon(stacker1.SelectedCellNumber) && !this.TEmode) return;
             if (e.ColumnIndex == 1)
             {
                 frmAddTake frm = new frmAddTake();
@@ -1304,7 +1304,7 @@ namespace Tiara
 
         private void button10_Click_2(object sender, EventArgs e)
         {
-            productsTableAdapter2.Update(this.dbTiaraDataSet2);
+            productsTableAdapter.Update(this.dbTiaraDataSet);
             /*
             // TODO: данная строка кода позволяет загрузить данные в таблицу "dbTiaraDataSet2.products". При необходимости она может быть перемещена или удалена.
             this.productsTableAdapter2.Fill(this.dbTiaraDataSet2.products);
@@ -1423,6 +1423,94 @@ namespace Tiara
                 btnTE.Text = "Тотальное редактирование";
                 stacker1_OnCellSelect(stacker1.SelectedCellNumber);
             }
+        }
+
+        private void cbProducts_TextChanged(object sender, EventArgs e)
+        {
+            //productlistBindingSource1.Filter = "name Like '%" + cbProducts.Text + "%'";
+        }
+
+        private int index;
+        private string actual;
+        private string found;
+        private int stridx;
+
+        private void cbProducts_KeyUp(object sender, KeyEventArgs e)
+        {/*
+            // Do nothing for certain keys, such as navigation keys.
+            if ((e.KeyCode == Keys.Back) ||
+                (e.KeyCode == Keys.Left) ||
+                (e.KeyCode == Keys.Right) ||
+                (e.KeyCode == Keys.Up) ||
+                (e.KeyCode == Keys.Down) ||
+                (e.KeyCode == Keys.Delete) ||
+                (e.KeyCode == Keys.PageUp) ||
+                (e.KeyCode == Keys.PageDown) ||
+                (e.KeyCode == Keys.Home) ||
+                (e.KeyCode == Keys.End))
+            {
+                return;
+            }
+
+            // Store the actual text that has been typed.
+            actual = this.cbProducts.Text;
+
+            // Find the first match for the typed value.
+            int tempidx = 0;
+            for (int i = 0; i < cbProducts.Items.Count; i++)
+            {
+                String str = this.cbProducts.Items[index].ToString();
+                tempidx = str.IndexOf(actual);
+                if (tempidx > -1)
+                {
+                    index = tempidx;
+                    break;
+                }
+            }
+           // index = this.cbProducts.FindString(actual);
+
+            // Get the text of the first match.
+            if (index > -1)
+            {
+                found = this.cbProducts.Items[index].ToString();
+
+                // Select this item from the list.
+                this.cbProducts.SelectedIndex = index;
+
+                // Select the portion of the text that was automatically
+                // added so that additional typing replaces it.
+                this.cbProducts.SelectionStart = actual.Length;
+                this.cbProducts.SelectionLength = found.Length;
+            }
+	*/
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            dbTiaraDataSet.Tables["productlist"].Rows.Add(0, newdetal.Text);
+            dataGridView2.Refresh();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (tbDetalFilter.Text == "Фильтр деталей")
+                tbDetalFilter.Text = "";
+            productlistBindingSource1.Filter = "name Like '%" + tbDetalFilter.Text + "%'";
+            cbProducts.Refresh();
+            
+        }
+
+        private void tbDetalFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+        }
+
+        private void tbDetalFilter_Click(object sender, EventArgs e)
+        {
+            if (tbDetalFilter.Text == "Фильтр деталей")
+                tbDetalFilter.Text = "";
+            productlistBindingSource1.Filter = "name Like '%" + tbDetalFilter.Text + "%'";
+            cbProducts.Refresh();
         }
     }
 }

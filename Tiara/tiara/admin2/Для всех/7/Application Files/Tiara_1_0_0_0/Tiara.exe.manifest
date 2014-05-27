@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Tiara.exe" version="1.0.0.0" publicKeyToken="abe66e8b29394e57" language="neutral" processorArchitecture="x86" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Tiara" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <commandLine file="Tiara.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          Параметры манифеста UAC
+          При необходимости изменить уровень управления учетными записями Windows замените 
+          узел requestedExecutionLevel одним из следующих значений.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+        Если вы хотите использовать виртуализацию файлов и реестра для обратной
+             совместимости, удалите узел requestedExecutionLevel.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.VisualBasic.PowerPacks.Vs" version="10.0.0.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AxInterop.SIIIGenericSlaveGUILib.dll" size="4608">
+      <assemblyIdentity name="AxInterop.SIIIGenericSlaveGUILib" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>tyC0/3H7EDgzYBUh/t+XVMMuWYc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BR.AN.PVIServices.dll" size="1798144">
+      <assemblyIdentity name="BR.AN.PVIServices" version="1.1.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>w/YLHQdogaloIrAXtRpotH6iMPU=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Interop.SIIIGenericSlaveGUILib.dll" size="5632">
+      <assemblyIdentity name="Interop.SIIIGenericSlaveGUILib" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>uaVdyqD+zLybC/tWCQ1g0iDujxQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\Microsoft.VisualBasic.PowerPacks.Vs.resources.dll" size="55192">
+      <assemblyIdentity name="Microsoft.VisualBasic.PowerPacks.Vs.resources" version="10.0.0.0" publicKeyToken="B03F5F7F11D50A3A" language="ru" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>J4loq1oPpZwGa70SasyOaUSvLQI=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Stackerlib.dll" size="47616">
+      <assemblyIdentity name="Stackerlib" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>XOxeIAHvWEi7WkzjmOgYxY3Xf3I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Tiara.exe" size="219648">
+      <assemblyIdentity name="Tiara" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>bkSAZ/AkxE25yAx1fI7ody9PmsM=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VncSharp.dll" size="147456">
+      <assemblyIdentity name="VncSharp" version="1.0.0.0" publicKeyToken="61974755C7BFEA7C" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>2hYhKYuVQ6qeE80M0yee3MERVDk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="LoaderAlarms.xml" size="69887" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>ynsdt55dfSM2ig4gaWi5rkfHa4w=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Tiara.exe.config" size="1320">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>ANkmR0Nrusxd+7D2ZYBB2Ez8jy8=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=anton-NOUT\anton" issuerKeyHash="2c61bc576ece37554138b98e20f131fa4fb3befd" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>RaAkJI7kYnYDathu5AqzvCecxVE=</DigestValue></Reference></SignedInfo><SignatureValue>J8xIFJANyemBrrc3laDxm3ksAKmqsn7+j1xibKd5ZSAIaTQ89GFg9t3Wxl0Q6f6QnKbOq3OZpo8fXhdohv8QqwwwmJE9YvV0hhFCUaUDvLUEEzAme02A3k34bLdwqeFBHl7QEyedfMdv3lYRGOxHzpr+9LS+qzE/o3e0UYJByVg=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>qF7CJ6VriV1LnTlmT0KGdACnFbMGl4PQlGEZpKdnCAUkDiDl2zabxar5nmcn06n/NsLbbvSV/hB6LBm1hSiYD+8PerZeCkoWXhjZXdgc7d/F5l/zOn2A5BhdyRZpfBYE4xkTKtpCLGcExe6Tgz+WAGDk84rluTAyw9xkE0uvOX0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="51c59c27bcb30ae46ed86a037662e48e2424a045" Description="" Url=""><as:assemblyIdentity name="Tiara.exe" version="1.0.0.0" publicKeyToken="abe66e8b29394e57" language="neutral" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=anton-NOUT\anton</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>tDI537GGONc7rHL3pBLxoemHt/I=</DigestValue></Reference></SignedInfo><SignatureValue>JlbFuxd/OXFKODvspERL3wvb5ll8LcZwNJXdF5MfH9PvFgwKijbFbBtSiIzk+ImQKZgizscJVLmofyXZG9zynRGOiShybSvvJPC5fJwkmYnnALS0yGSHgtYNDC1Iohanaf6rTkN+Bl15Nh5K3EC/3PmvJCPj1OnysTMcEjwt50U=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>qF7CJ6VriV1LnTlmT0KGdACnFbMGl4PQlGEZpKdnCAUkDiDl2zabxar5nmcn06n/NsLbbvSV/hB6LBm1hSiYD+8PerZeCkoWXhjZXdgc7d/F5l/zOn2A5BhdyRZpfBYE4xkTKtpCLGcExe6Tgz+WAGDk84rluTAyw9xkE0uvOX0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB2TCCAUKgAwIBAgIQTH2fqORDrIJFms0qYciV7jANBgkqhkiG9w0BAQUFADArMSkwJwYDVQQDHiAAYQBuAHQAbwBuAC0ATgBPAFUAVABcAGEAbgB0AG8AbjAeFw0xNDA0MDEwOTA4MzNaFw0xNTA0MDExNTA4MzNaMCsxKTAnBgNVBAMeIABhAG4AdABvAG4ALQBOAE8AVQBUAFwAYQBuAHQAbwBuMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoXsInpWuJXUudOWZPQoZ0AKcVswaXg9CUYRmkp2cIBSQOIOXbNpvFqvmeZyfTqf82wttu9JX+EHosGbWFKJgP7w96tl4KShZeGNld2Bzt38XmX/M6fYDkGF3JFml8FgTjGRMq2kIsZwTF7pODP5YAYOTziuW5MDLD3GQTS685fQIDAQABMA0GCSqGSIb3DQEBBQUAA4GBABOnN36rg3n5eF8Q4St9Kon2Nk7BxPZH7Q7UGkC0SiPTWCRn4XO1JlTV1xN1AhwxIK7RiQNYoB5gM04tSYZzY150wN+PxTZPXBeeykSDG7Vn53whBp2lYtgpl8Xc8rINwNtn6xxbZsQ+NLjG/05FrKfgEitxz38JrmTjedqzqNaP</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

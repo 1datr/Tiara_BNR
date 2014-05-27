@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>  
   <configSections>
     </configSections>
@@ -12,7 +12,9 @@
     </appender>
   -->
     <connectionStrings>
-        <add name="Tiara.Properties.Settings.dbTiaraConnectionString" connectionString="Data Source=ANTON-NOUT\SQLEXPRESS;Initial Catalog=Kirishi;Integrated Security=True;Pooling=False" providerName="System.Data.SqlClient"/>
+        <add name="Tiara.Properties.Settings.dbTiaraConnectionString"
+            connectionString="Data Source=ANTON-NOUT\SQLEXPRESS;Initial Catalog=dbtiara;Integrated Security=True;Pooling=False"
+            providerName="System.Data.SqlClient" />
     </connectionStrings>
   <!-- 
 <connectionStrings>
@@ -22,12 +24,9 @@
     </connectionStrings>
 -->
   
-  <appSettings>    
-    <add key="PLC_IP_1" value="127.0.0.1"/>
-    <add key="PLC_PORT_1" value="11160"/>
-
-    <add key="PLC_IP_2" value="127.0.0.1"/>
-    <add key="PLC_PORT_2" value="11159"/>
+  <appSettings>
+    <add key="PLC_IP" value="192.168.1.200" />
+    <add key="PLC_PORT" value="11159" />
   </appSettings>
   <!--
   <appSettings>
@@ -35,4 +34,4 @@
     <add key="PLC_PORT" value="11160" />
   </appSettings>
   -->
-<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/></startup></configuration>
+</configuration>

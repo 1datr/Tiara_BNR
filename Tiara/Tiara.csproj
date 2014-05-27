@@ -11,7 +11,8 @@
     <RootNamespace>Tiara</RootNamespace>
     <AssemblyName>Tiara</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -212,9 +213,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Stackerlib\Stackerlib.csproj">
-      <Project>{1CA43CB4-CA21-4938-BC65-D94CD1B0CAB6}</Project>
-      <Name>Stackerlib</Name>
+    <ProjectReference Include="..\..\Kirishi2\StackerLib\StackerLib.csproj">
+      <Project>{167745FE-9DBB-4576-B0C8-05044340F9D2}</Project>
+      <Name>StackerLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

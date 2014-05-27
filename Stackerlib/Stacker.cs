@@ -91,17 +91,52 @@ namespace Stackerlib
             }
         }
 
-        private int[] fCellsNextPass = {};
+        private List<CellPassInfo> fCellsNextPass;
         [DisplayName("Ячейки с пропуском")]
         [Description("Ячейки после которых пропустить нумерацию следующей")]
-        public int[] CellsNextPass
+        public String CellsNextPass
         {
-            get {
-                return fCellsNextPass;
+            get
+            {
+                String str = "";
+                int i = 0;
+                foreach (CellPassInfo ci in fCellsNextPass)
+                {
+                    if (i > 0)
+                        str = str + "," + ci.cell.ToString();
+                    else
+                        str = str + ci.cell.ToString();
+
+                    if (ci.passcount > 1)
+                        str = str + ":" + ci.passcount.ToString();
+                    i++;
+                }
+                return str;
             }
-            set {
-                fCellsNextPass = value;
-                Array.Sort(fCellsNextPass);
+            set
+            {
+                try
+                {
+                    String[] arr1 = value.Split(new Char[] { ',' });
+                    fCellsNextPass = new List<CellPassInfo>();
+                    foreach (String cellstr in arr1)
+                    {
+                        String[] arr2 = cellstr.Split(new Char[] { ':' });
+                        if (arr2.Length > 1)
+                        {
+                            fCellsNextPass.Add(new CellPassInfo(Convert.ToInt32(arr2[0]), Convert.ToInt32(arr2[1])));
+                        }
+                        else
+                        {
+                            fCellsNextPass.Add(new CellPassInfo(Convert.ToInt32(cellstr)));
+                        }
+                    }
+                    fCellsNextPass.Sort();
+                }
+                catch (Exception e)
+                {
+
+                }
                 init_component();
             }
         }
@@ -214,111 +249,147 @@ namespace Stackerlib
             pnl_zahvat.Top = pnlStacker.Height / 2 - pnl_zahvat.Height / 2;
         }
 
-        private List<CellAddr> CellAddrs;
+        // нумеровать ячейки
+
+        private void PassSomeCells(ref CellAddr ca, int ncell)
+        {
+            if (fCellsNextPass == null) fCellsNextPass = new List<CellPassInfo>();
+            CellPassInfo thecell2 = this.fCellsNextPass.Find(delegate(CellPassInfo cpi)
+            {
+                return (cpi.cell == ncell);
+            }
+            );
+            if (thecell2 != null)
+                for (int i = 0; i < thecell2.passcount; i++)
+                {
+                    NextCell(ref ca);
+                    maxcell--;
+                    printcell(ca, ncell, "");
+                }
+        }
+
+        // следующая по номеру ячейка
+        private void NextCell(ref CellAddr ca)
+        {
+            if (ca.rack == 0)   // left rack
+            {
+                if (ca.y > 0)
+                    ca.y--;
+                else
+                {
+                    ca.y = fFloors - 1;
+                    ca.x++;
+                }
+            }
+            else            // right rack           
+            {
+                if (ca.y < fFloors - 1)
+                    ca.y++;
+                else
+                {
+                    ca.y = 0;
+                    ca.x++;
+                }
+            }
+
+            if (ca.x == fRows)
+            {
+                ca.x = 0;
+                ca.y = 0;
+                ca.rack = 1;
+            }
+        }
+
+        private CellAddr getAddr(int ncell)
+        {
+            if (CellAddrs == null) CellAddrs = new Dictionary<int, CellAddr>();
+            if (CellAddrs.ContainsKey(ncell))
+                return CellAddrs[ncell];
+            if (ncell == 0)
+            {
+                CellAddr ca = new CellAddr();
+                ca.x = 0;
+                ca.y = fFloors - 1;
+                ca.rack = 0;
+                PassSomeCells(ref ca, ncell);
+                CellAddrs.Add(ncell, ca);
+                return ca;
+            }
+            else
+            {
+                CellAddr ca = getAddr(ncell - 1);
+
+                NextCell(ref ca);
+                PassSomeCells(ref ca, ncell);
+                CellAddrs.Add(ncell, ca);
+                return ca;
+            }
+        }
+
+        private void printcell(CellAddr ca, int ncell, String celltext)
+        {
+            if (ca.rack == 0)
+            {
+                if (ca.y > dgvRackLeft.Rows.Count - 1) return;
+                if (ca.x > dgvRackLeft.Rows[0].Cells.Count - 1) return;
+
+                this.dgvRackLeft.Rows[ca.y].Cells[ca.x].Value = celltext;
+
+                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[ca.y].Cells[ca.x].Style;
+                if (this.fPoddonCells == null) this.fPoddonCells = new int[0];
+                if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
+                {
+                    // ячейка куда можно класть
+                    if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
+                        dgvc.BackColor = this.InputStyle.BackColor;
+                    else
+                        dgvc.BackColor = this.PoddonStyle.BackColor;
+
+                }
+                else
+                    dgvc.BackColor = Color.FromArgb(255, 255, 255);
+                this.dgvRackLeft.Rows[ca.y].Cells[ca.x].Style = dgvc;
+            }
+            else if (ca.rack == 1)
+            {
+                if (ca.y > dgvRackRight.Rows.Count - 1) return;
+                if (ca.x > dgvRackRight.Rows[0].Cells.Count - 1) return;
+
+                this.dgvRackRight.Rows[ca.y].Cells[ca.x].Value = celltext;
+
+                DataGridViewCellStyle dgvc = dgvRackRight.Rows[ca.y].Cells[ca.x].Style;
+                if (this.fPoddonCells == null) this.fPoddonCells = new int[0];
+                if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
+                {
+                    // ячейка куда можно класть
+                    if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
+                        dgvc.BackColor = this.InputStyle.BackColor;
+                    else
+                        dgvc.BackColor = this.PoddonStyle.BackColor;
+
+                }
+                else
+                    dgvc.BackColor = Color.FromArgb(255, 255, 255);
+                this.dgvRackRight.Rows[ca.y].Cells[ca.x].Style = dgvc;
+            }
+        }
+
+        private Dictionary<int, CellAddr> CellAddrs;
         // нумеровать ячейки
         private void numerate()
         {
-            CellAddrs = new List<CellAddr>();
+            CellAddrs = new Dictionary<int, CellAddr>();
+            maxcell = 2 * fFloors * fRows;
             int ncell = 0;
-            bool passcell = false;
-            for (int x = 0; x < fRows; x++)
+            while (ncell < maxcell)
             {
-                for (int y = 0; y < fFloors; y++)
-                {
-                    // не пустые ли                    
-                    if(passcell)    // пропускаем
-                    {                        
-                        DataGridViewCellStyle cellstyle = this.dgvRackLeft.Rows[fFloors - 1 - y].Cells[x].Style;
-                        cellstyle.SelectionBackColor = cellstyle.BackColor;
-                        this.dgvRackRight.Rows[fFloors - 1 - y].Cells[x].Style = cellstyle;
-                        
-                        cellstyle.SelectionForeColor = cellstyle.BackColor;
-                        cellstyle.ForeColor = cellstyle.BackColor;
-                        Padding pdng = cellstyle.Padding;
-                        pdng.All = -2;
-                        cellstyle.Padding = pdng;
-                        this.dgvRackRight.Rows[fFloors - 1 - y].Cells[x].Style = cellstyle;
-                        passcell = false;                     
-                    }
-                    else  // иначе рисуем
-                    {
-                        CellAddr ca = new CellAddr();
-                        ca.rack = 0;
-                        ca.x = x;
-                        ca.y = fFloors - 1 - y;
-                        CellAddrs.Add(ca);
-                        this.dgvRackLeft.Rows[fFloors - 1 - y].Cells[x].Value = ncell.ToString();
-                        DataGridViewCellStyle dgvc = dgvRackLeft.Rows[fFloors - 1 - y].Cells[x].Style;
-                        // поддонная ячейка
-                        if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
-                        {
-                            // ячейка куда можно класть
-                            if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
-                                dgvc.BackColor = this.InputStyle.BackColor;
-                            else
-                                dgvc.BackColor = this.PoddonStyle.BackColor;
-                            
-                        }
-                        else
-                            dgvc.BackColor = Color.FromArgb(255, 255, 255);
-                        this.dgvRackLeft.Rows[fFloors - 1 - y].Cells[x].Style = dgvc;
-                        ncell++;
-                        if (Array.BinarySearch<int>(fCellsNextPass, ncell) > -1) passcell = true;
-                    }
-                                       
-                    
-                }
-            }
-            // right
-            for (int x = 0; x < fRows; x++)
-            {
-                for (int y = 0; y < fFloors; y++)
-                {
-                    if (passcell)                    
-                    {
-                        DataGridViewCellStyle cellstyle = this.dgvRackRight.Rows[y].Cells[x].Style;
-                        cellstyle.SelectionBackColor = cellstyle.BackColor;
-                        cellstyle.SelectionForeColor = cellstyle.BackColor;
-                        cellstyle.ForeColor = cellstyle.BackColor;
-                        Padding pdng = cellstyle.Padding;
-                        pdng.All = -2;
-                        cellstyle.Padding = pdng;
-                        this.dgvRackRight.Rows[y].Cells[x].Style = cellstyle;
-                        passcell = false;
-                    }
-                    else
-                    {
-                        CellAddr ca = new CellAddr();
-                        ca.rack = 1;
-                        ca.x = x;
-                        ca.y = y;
-                        CellAddrs.Add(ca);
-                        this.dgvRackRight.Rows[y].Cells[x].Value = ncell.ToString();
-                        // поддонная ячейка
-                        DataGridViewCellStyle dgvc = dgvRackRight.Rows[y].Cells[x].Style;
-                        if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
-                        {
-                            // ячейка куда можно класть
-                            if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
-                                dgvc.BackColor = this.InputStyle.BackColor;
-                            else
-                                dgvc.BackColor = this.PoddonStyle.BackColor;
-
-                        }
-                        else
-                            dgvc.BackColor = Color.FromArgb(255, 255, 255);
-
-                        this.dgvRackRight.Rows[y].Cells[x].Style = dgvc;
-                        ncell++;
-                        if (Array.BinarySearch<int>(fCellsNextPass, ncell) > -1) 
-                            passcell = true;
-                    }                                      
-                    
-                }
+                CellAddr ca = getAddr(ncell);
+                printcell(ca, ncell, ncell.ToString());
+                ncell++;
             }
 
-            maxcell = ncell - 1;
         }
+        
         private int maxcell;
 
         public int MaxCell { get { return maxcell; } }
@@ -532,8 +603,15 @@ namespace Stackerlib
             currdgv = dgvRackLeft;
             if (currdgv.SelectedCells.Count > 0)
             {
-                selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
-                exe_OnCellSelect(selected_cell_num);
+                try
+                {
+                    selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
+                    exe_OnCellSelect(selected_cell_num);
+                }
+                catch (System.Exception ex)
+                { 
+                
+                }
             }
         }
 
@@ -613,8 +691,10 @@ namespace Stackerlib
         // Установить ячейку по стилю свободной
         public void SetCellFree(int ncell)
         {
+            if (CellAddrs == null) CellAddrs = new Dictionary<int, CellAddr>();
+            if (!CellAddrs.ContainsKey(ncell)) return;
             CellAddr caddr = CellAddrs[ncell];
-            if(caddr.rack==0)
+            if(caddr.rack==0) 
             {
                 DataGridViewCellStyle dgvc = dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style;
                 if (dgvc.ForeColor == Color.FromArgb(0, 0, 0)) return;
@@ -653,54 +733,60 @@ namespace Stackerlib
         // установить стили ячеек
         private void walk_cell_styles()
         {
-            if (this.OnGetCellCountDelegate_hndlr == null) return;
-            if (dgvRackLeft.Rows.Count < fFloors) return;
-            if (dgvRackLeft.Columns.Count < fRows) return;
-            if (dgvRackRight.Rows.Count < fFloors) return;
-            if (dgvRackRight.Columns.Count < fRows) return;
-            // цвет занятых ячеек
-            Color OccupiedColor = Color.FromArgb(255,00,00);
+            
+                if (this.OnGetCellCountDelegate_hndlr == null) return;
+                if (dgvRackLeft.Rows.Count < fFloors) return;
+                if (dgvRackLeft.Columns.Count < fRows) return;
+                if (dgvRackRight.Rows.Count < fFloors) return;
+                if (dgvRackRight.Columns.Count < fRows) return;
+                // цвет занятых ячеек
+                Color OccupiedColor = Color.FromArgb(255, 00, 00);
 
-            for (int y = 0; y < dgvRackLeft.Rows.Count; y++)
-            {
-                for (int x = 0; x < dgvRackLeft.Columns.Count; x++)
+                for (int y = 0; y < dgvRackLeft.Rows.Count; y++)
                 {
-                    // Left rack
-                    if (dgvRackLeft.Rows[y].Cells[x].Value != null)
+                    for (int x = 0; x < dgvRackLeft.Columns.Count; x++)
                     {
-                        int ncell_left = System.Convert.ToInt32(dgvRackLeft.Rows[y].Cells[x].Value);
-                        if (OnGetCellCountDelegate_hndlr(ncell_left)>0)
+                        // Left rack
+                        if (dgvRackLeft.Rows[y].Cells[x].Value != null)
                         {
-                            DataGridViewCellStyle dgvc = dgvRackLeft.Rows[y].Cells[x].Style;
-                            dgvc.ForeColor = OccupiedColor;
-                            dgvRackLeft.Rows[y].Cells[x].Style = dgvc;
+                            if (dgvRackLeft.Rows[y].Cells[x].Value.ToString() == "") continue;
+
+                            int ncell_left = System.Convert.ToInt32(dgvRackLeft.Rows[y].Cells[x].Value);
+                            if (OnGetCellCountDelegate_hndlr(ncell_left) > 0)
+                            {
+                                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[y].Cells[x].Style;
+                                dgvc.ForeColor = OccupiedColor;
+                                dgvRackLeft.Rows[y].Cells[x].Style = dgvc;
+                            }
+                            else
+                            {
+                                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[y].Cells[x].Style;
+                                dgvc.ForeColor = Color.FromArgb(0, 0, 0);
+                                dgvRackLeft.Rows[y].Cells[x].Style = dgvc;
+                            }
                         }
-                        else
+                        // Right rack
+                        if (dgvRackRight.Rows[y].Cells[x].Value != null)
                         {
-                            DataGridViewCellStyle dgvc = dgvRackLeft.Rows[y].Cells[x].Style;
-                            dgvc.ForeColor = Color.FromArgb(0, 0, 0);
-                            dgvRackLeft.Rows[y].Cells[x].Style = dgvc;
-                        }
-                    }
-                    // Right rack
-                    if (dgvRackRight.Rows[y].Cells[x].Value != null)
-                    {
-                        int ncell_right = System.Convert.ToInt32(dgvRackRight.Rows[y].Cells[x].Value);
-                        if (OnGetCellCountDelegate_hndlr(ncell_right)>0)
-                        {
-                            DataGridViewCellStyle dgvc = dgvRackRight.Rows[y].Cells[x].Style;
-                            dgvc.ForeColor = OccupiedColor;
-                            dgvRackRight.Rows[y].Cells[x].Style = dgvc;
-                        }
-                        else
-                        {
-                            DataGridViewCellStyle dgvc = dgvRackRight.Rows[y].Cells[x].Style;
-                            dgvc.ForeColor = Color.FromArgb(0, 0, 0);
-                            dgvRackRight.Rows[y].Cells[x].Style = dgvc;
+                            if (dgvRackRight.Rows[y].Cells[x].Value.ToString() == "") continue;
+
+                            int ncell_right = System.Convert.ToInt32(dgvRackRight.Rows[y].Cells[x].Value);
+                            if (OnGetCellCountDelegate_hndlr(ncell_right) > 0)
+                            {
+                                DataGridViewCellStyle dgvc = dgvRackRight.Rows[y].Cells[x].Style;
+                                dgvc.ForeColor = OccupiedColor;
+                                dgvRackRight.Rows[y].Cells[x].Style = dgvc;
+                            }
+                            else
+                            {
+                                DataGridViewCellStyle dgvc = dgvRackRight.Rows[y].Cells[x].Style;
+                                dgvc.ForeColor = Color.FromArgb(0, 0, 0);
+                                dgvRackRight.Rows[y].Cells[x].Style = dgvc;
+                            }
                         }
                     }
                 }
-            }
+            
         }
 
         private void положитьВToolStripMenuItem_Click(object sender, EventArgs e)
@@ -812,6 +898,18 @@ namespace Stackerlib
             {
                 OnClickStacker_hndlr();
             }
+        }
+    }
+
+    // информация о пропускаемых ячейках
+    public class CellPassInfo
+    {
+        public int cell { get; set; }
+        public int passcount { get; set; }
+        public CellPassInfo(int cell = 0, int count = 1)
+        {
+            this.cell = cell;
+            this.passcount = count;
         }
     }
 }
