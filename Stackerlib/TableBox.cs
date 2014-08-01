@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
@@ -18,7 +12,7 @@ using System.Xml.Linq;
 using System.Data.SqlClient;
 using System.Configuration;
 
-namespace Stackerlib
+namespace StackerLib
 {
     public partial class TableBox : Component
     {
@@ -40,14 +34,14 @@ namespace Stackerlib
 
         [DisplayName("DataSet")]
         [Description("DataSet таблицы")]
-        public DataSet DS { get; set; }
+        public global::System.ComponentModel.Component DS { get; set; }
 
         [DisplayName("DataAdapter")]
         [Description("DataAdapter таблицы")]
-        public IDataAdapter DA { get; set; }
+        public global::System.ComponentModel.Component DA { get; set; }
 
         [DisplayName("DataTable")]
         [Description("DataTable таблицы")]
-        public DataTable DT { get; set; }
+        public global::System.ComponentModel.Component DT { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Stackerlib
+﻿namespace StackerLib
 {
     partial class TableBox
     {

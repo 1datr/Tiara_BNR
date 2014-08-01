@@ -49,6 +49,7 @@
             this.tbCount.Name = "tbCount";
             this.tbCount.Size = new System.Drawing.Size(128, 20);
             this.tbCount.TabIndex = 0;
+            this.tbCount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbCount_KeyDown);
             // 
             // button2
             // 
@@ -64,7 +65,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(312, 44);
+            this.ClientSize = new System.Drawing.Size(308, 40);
             this.ControlBox = false;
             this.Controls.Add(this.button2);
             this.Controls.Add(this.tbCount);

@@ -34,9 +34,9 @@ namespace Tiara
 
         private void ShowStatus(String status_str)
         {
-            tsl_error.Text = status_str;
+         //   tsl_error.Text = status_str;
         }
-
+        /*
         private void Connect_Service(String servname)
         {
             Varlist = new Dictionary<string, Variable>();
@@ -62,13 +62,10 @@ namespace Tiara
             cpu = new Cpu(service, "Cpu");
             //cpu.Connection.DeviceType = DeviceType.Serial;
             cpu.Connection.DeviceType = DeviceType.TcpIp;
-         /*   cpu.Connection.TcpIp.DestinationIpAddress = "127.0.0.1";
-            cpu.Connection.TcpIp.DestinationPort = 11160;*/
+        
             cpu.Connection.TcpIp.DestinationIpAddress = ConfigurationManager.AppSettings["PLC_IP_1"];
             cpu.Connection.TcpIp.DestinationPort = short.Parse(ConfigurationManager.AppSettings["PLC_PORT_1"]);
-            /*
-            cpu.Connection.TcpIp.DestinationIpAddress = "192.168.1.200";
-            cpu.Connection.TcpIp.DestinationPort = 11159;*/
+    
             //cpu.Connection.Serial.Channel = 1;
             cpu.Error += new PviEventHandler(ConnectionError);
             cpu.Connected += new PviEventHandler(Connect_Vars);
@@ -90,7 +87,9 @@ namespace Tiara
         {
             return Varlist[Varname].Value;
         }
+*/
         //
+        /*
         private void Connect_Vars(object sender, PviEventArgs e)
         {
             ShowStatus("PVI CPU connected");
@@ -126,8 +125,8 @@ namespace Tiara
             AddVar("gOPC.Input.command");
             AddVar("gOPC.Input.power");
             
-        }
-
+        }*/
+        /*
         private void variables_Connected(object sender, PviEventArgs e)
         {
             ShowStatus("PVI variables connected");
@@ -135,8 +134,8 @@ namespace Tiara
             if (Varlist.ContainsKey("gOPC.Input.power"))
                 Varlist["gOPC.Input.power"].Value = true;
             gb_commands.Enabled = true;
-        }
-
+        }*/
+        /*
         private void ConnectionError(object sender, PviEventArgs e)
         {
             try
@@ -152,7 +151,7 @@ namespace Tiara
                 this.tsl_error.Text = ex.Message;
             }
             //Application.Exit();
-        }
+        }*/
         // Отслеживание значений переменных
         private int status = 0;
         private bool power = false;
@@ -160,7 +159,7 @@ namespace Tiara
         private bool vch_first = true;
         private bool cell_test_mode = false;
         private bool autokvit = false;
-
+        /*
         private void ValueChanged(object sender, VariableEventArgs e)
         {
             Variable var = (Variable)sender;
@@ -295,12 +294,7 @@ namespace Tiara
                     DrawModule(Varlist["gModule13"], dgvMod13);
                     break;
             }
-            /*
-            if ((mode == 0) && (status == 0) && (power) && (cpu.State == CpuState.Run))
-                gb_commands.Enabled = true;
-            else
-                gb_commands.Enabled = false;
-            */
+            
 
             if (power)
             {
@@ -334,7 +328,7 @@ namespace Tiara
             }
             //Trigger_State();
         }
-
+*/
     private void DrawModule(Variable v,DataGridView dgv)
     {
         dgv.ReadOnly = true;
@@ -379,7 +373,7 @@ namespace Tiara
         
 
     }
-
+/*
         private void load(int cell) // загрузка из ячейки
         {
             lock (this)
@@ -397,24 +391,20 @@ namespace Tiara
                 }
 
                 LogMes("Взято из ячейки " + cell.ToString());
-                /*
-                ProductsDataSet.Tables["products"].AcceptChanges();                
-                ProductsDataSet.AcceptChanges();
-                productsTableAdapter1.Update(ProductsDataSet);
-                */
+               
                 
-              /*  this.dbTiaraDataSet.products.AcceptChanges();
-                dbTiaraDataSet.AcceptChanges();*/
+            
                 productsTableAdapter.Update(dbTiaraDataSet);
                 dbTiaraDataSet.AcceptChanges();
 
                 bsPoddon.Filter = bsPoddon.Filter;
                 this.bsProductlist.Filter = bsProductlist.Filter;
-                //productlistTableAdapter.Update(this.dbTiaraDataSet4);
+               
                 stacker1.refresh();
             }
         }
-        
+        */
+        /*
         private void unload(int cell)   // выгрузка в ячейку
         {
             lock (this)
@@ -432,14 +422,7 @@ namespace Tiara
                   //  Rows[i].AcceptChanges();                    
                 }
                 LogMes("Помещено в ячейку " + cell.ToString());
-                /*
-                ProductsDataSet.Tables["products"].AcceptChanges();
-                ProductsDataSet.AcceptChanges();
-                productsTableAdapter1.Update(ProductsDataSet);
-                */
-                /*
-                this.dbTiaraDataSet.products.AcceptChanges();
-                dbTiaraDataSet.AcceptChanges();*/
+                
                 productsTableAdapter.Update(dbTiaraDataSet);
                 dbTiaraDataSet.AcceptChanges();
                 
@@ -450,7 +433,8 @@ namespace Tiara
                 
             }
         }
-
+        */
+        /*
         private void Trigger_State()
         { 
 
@@ -466,7 +450,7 @@ namespace Tiara
             { 
             
             }
-        }
+        }*/
         // Парковать
         private void Park()
         {
@@ -550,9 +534,9 @@ namespace Tiara
             }
            */
            // logger = LogManager.GetCurrentClassLogger();
-            
+            /*
             CurrCmd = new Command();
-            Connect_Service("serv1");
+            Connect_Service("serv1");*/
         }
 
         private void LogMes(String mes)
@@ -571,7 +555,7 @@ namespace Tiara
         {
             Park();
         }
-
+        /*
         private void button2_Click(object sender, EventArgs e)
         {
             this.TakeFrom(System.Convert.ToInt32(this.Src_TakeFrom.Text));
@@ -586,7 +570,8 @@ namespace Tiara
         {
             this.Trans(System.Convert.ToInt32(this.Trans_Src.Text), System.Convert.ToInt32(this.Trans_Dst.Text));
         }
-
+        */
+        /*
         private void stacker1_OnCellSelect(int cellno)
         {
             this.tabChoosenCell.Text = "Ячейка " + cellno.ToString();
@@ -603,14 +588,15 @@ namespace Tiara
             tabCellinfo.SelectedIndex = 0;
             //productsBindingSource1.
         }
-
+        */
+        /*
         private int stacker1_OnGetCellCount(int cellno)
         {
 
            // DataRow[] Rows = ProductsDataSet.Tables["products"].Select("stacker_id=1 AND cell_id = " + cellno);
             DataRow[] Rows = dbTiaraDataSet.Tables["products"].Select("stacker_id=1 AND cell_id = " + cellno);
             return Rows.Length;
-        }
+        }*/
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -630,22 +616,23 @@ namespace Tiara
                 from r in dbTiaraDataSet.products    
                 join p in dbTiaraDataSet.productlist  
                 on r.product_id equals p.id
-                where r.stacker_id == 1
-                && p.name.ToLower().Contains(tbSearchStr.Text)
-                select new { r.cell_id, p.name, r.count, r.changed };
+                where (r.cell_id!=-1) && (p.name.ToLower().Contains(tbSearchStr.Text))
+                select new { r.cell_id, p.name, r.count, r.changed, r.stacker_id };
             dgvSearch.Rows.Clear();
             foreach (var row in result_rows)
             {
-                dgvSearch.Rows.Add(row.cell_id.ToString(), row.name.ToString(), row.count.ToString(), row.changed.ToString());
+                dgvSearch.Rows.Add(row.cell_id.ToString(), row.name.ToString(), row.count.ToString(), row.changed.ToString(), row.stacker_id.ToString());
                 //Console.WriteLine("{0} bought {1}", group.Name, group.Product);
             }
         }
         //
+        /*
         private void button1_Click_1(object sender, EventArgs e)
         {
             cmdManager1.AddCommand(0);
-        }
+        }*/
         //
+        /*
         private void button2_Click_1(object sender, EventArgs e)
         {
             try {
@@ -653,11 +640,11 @@ namespace Tiara
             }
             catch (System.Exception ex) { }
             
-            /*
             if (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0)
-                this.TakeFrom(Convert.ToInt32(this.Src_TakeFrom.Text));*/
-        }
+                this.TakeFrom(Convert.ToInt32(this.Src_TakeFrom.Text));
+        }*/
         //
+        /*
         private void button3_Click_1(object sender, EventArgs e)
         {
             try
@@ -665,12 +652,13 @@ namespace Tiara
                 cmdManager1.AddCommand(2,-1,Convert.ToInt32(this.PutTo_Dest.Text));
             }
             catch (System.Exception ex) { }
-            /*
+            
             if (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0)
             
-                this.PutTo(Convert.ToInt32(this.PutTo_Dest.Text));*/
+                this.PutTo(Convert.ToInt32(this.PutTo_Dest.Text));
         }
-
+    */
+        /*
         private void Trans()
         {
             try
@@ -678,25 +666,15 @@ namespace Tiara
                 cmdManager1.AddCommand(3, Convert.ToInt32(this.Trans_Src.Text), Convert.ToInt32(this.Trans_Dst.Text));
             }
             catch (System.Exception ex) { }
-            /*
-            if (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0)
-            {
-                try {
-                    this.Trans(Convert.ToInt32(this.Trans_Src.Text), Convert.ToInt32(this.Trans_Dst.Text));
-                }
-                catch (System.Exception e)
-                { 
-                
-                }
-                
-            }*/
+           
         }
+        */
         //
-        private void button4_Click_1(object sender, EventArgs e)
+        /*private void button4_Click_1(object sender, EventArgs e)
         {
             Trans();
         }
-               
+          */     
         private void dataGridView2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             /*dgvProdList.Rows[e.RowIndex].Cells["stacker_id"].Value = this.stacker1.SelectedCellNumber;
@@ -772,22 +750,20 @@ namespace Tiara
             }*/
             
         }
-
+        /*
         private void sqdt_productlist_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             
-            /*if(e.Row!=null)
-                sqLiteDataAdapter1.Update(this.sqdt_productlist);*/
-           // this.dataSet1.AcceptChanges();
+            
             productlistTableAdapter.Update(this.dbTiaraDataSet);
             stacker1.refresh();
         }
-
+        */
         private void productsBindingSource1_ListChanged(object sender, ListChangedEventArgs e)
         {
             //this.dataSet1.AcceptChanges();
             productsTableAdapter.Update(this.dbTiaraDataSet);
-            stacker1.refresh();
+           // stacker1.refresh();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -809,7 +785,7 @@ namespace Tiara
         {
             
         }
-
+        /*
         private void bsProductlist_CurrentItemChanged(object sender, EventArgs e)
         {
             DataRowView currentRow = (DataRowView)bsProductlist.Current;
@@ -820,7 +796,7 @@ namespace Tiara
             }
             productlistTableAdapter.Update(this.dbTiaraDataSet);
         }
-
+        */
         private void bsPoddon_ListChanged(object sender, ListChangedEventArgs e)
         {
             //productsTableAdapter.Update(this.dbTiaraDataSet);
@@ -879,7 +855,7 @@ namespace Tiara
         {
             Kvit();
         }
-
+        /*
         private void button8_Click_1(object sender, EventArgs e)
         {
             int maxcnt = 12;
@@ -891,7 +867,7 @@ namespace Tiara
                 System.Threading.Thread.Sleep(100);
             }
         }
-
+        */
         private void makeerrortable()
         {
             XmlTextReader reader = new XmlTextReader("LoaderAlarms.xml");
@@ -975,16 +951,13 @@ namespace Tiara
         {
             
         }
-
+        /*
         private void out_cpu_state()
         {
             
                 //CpuState.Offline
                 switch (cpu.State)
-                {
-                    /*  case CpuState.Boot:
-                          lblCPUStatus.Text = "Boot";
-                          break;*/
+                {                    
                     case CpuState.Service:
                         lblCPUStatus.Text = "Service";
                         break;
@@ -1003,7 +976,7 @@ namespace Tiara
                 }
             
         }
-
+        */
         private void dgvMod9_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -1013,7 +986,7 @@ namespace Tiara
         {
 
         }
-
+        /*
         private void tabPoddon_Layout(object sender, LayoutEventArgs e)
         {
             bsPoddon.Filter = bsPoddon.Filter;
@@ -1039,12 +1012,12 @@ namespace Tiara
         {
             stacker1.refresh();
         }
-
+        */
         private void productlistBindingSource2_ListChanged(object sender, ListChangedEventArgs e)
         {
             productlistTableAdapter.Update(dbTiaraDataSet);
         }
-
+        /*
         private void button10_Click(object sender, EventArgs e)
         {
             productsTableAdapter.Update(this.dbTiaraDataSet);
@@ -1064,7 +1037,7 @@ namespace Tiara
             Trans();
         }
 
- 
+
         private void dgvProdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             
@@ -1142,8 +1115,8 @@ namespace Tiara
                     currentRow["changed"] = DateTime.Now;
                     currentRow["product_id"] = Convert.ToInt32(cbProducts.SelectedValue.ToString());
                     if (tbProdCount.Text != "")
-                     /*   currentRow["count"] = 0;
-                    else*/
+                       currentRow["count"] = 0;
+                    else
                         currentRow["count"] = Convert.ToInt32(tbProdCount.Text);
                     if (Convert.ToInt32(currentRow["count"].ToString()) <= 0)
                         this.bsProductlist.RemoveCurrent();
@@ -1166,9 +1139,9 @@ namespace Tiara
             catch (System.Exception ex) {
                 MessageBox.Show(ex.Message);
             }
-            /*
+           
             if (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0)
-                this.TakeFrom(this.stacker1.SelectedCellNumber);*/
+                this.TakeFrom(this.stacker1.SelectedCellNumber);
             return default(int);
         }
 
@@ -1179,14 +1152,15 @@ namespace Tiara
                 cmdManager1.AddCommand(2, -1, this.stacker1.SelectedCellNumber);
             }
             catch (System.Exception ex) { }
-            /*
+            
             if (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0)
                 this.PutTo(this.stacker1.SelectedCellNumber);
             return default(int);
-             * */
+           
             return 0;
         }
-
+    */
+        /*
         private void rectangleShape1_Paint(object sender, PaintEventArgs e)
         {
             rectangleShape1.BackColor = stacker1.StyleInput.BackColor;
@@ -1237,7 +1211,7 @@ namespace Tiara
                 catch (System.Exception ex) { }
 
             }
-        }
+        }*/
 
         private void label17_Click(object sender, EventArgs e)
         {
@@ -1257,7 +1231,7 @@ namespace Tiara
             }
             return default(string);
         }
-
+        /*
         private bool cmdManager1_OnExe(int cmd, int op1, int op2)
         {
             
@@ -1277,12 +1251,12 @@ namespace Tiara
         {            
             return (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0);
         }
-
+        
         private void stacker1_OnClickStacker()
         {
             tabCellinfo.SelectedIndex = 1;
         }
-
+        */
         private void label2_Click(object sender, EventArgs e)
         {
 
@@ -1347,7 +1321,7 @@ namespace Tiara
         {
 
         }
-
+        /*
         private void button11_Click(object sender, EventArgs e)
         {
             this.cell_test_mode = true;
@@ -1361,13 +1335,13 @@ namespace Tiara
                     cmdManager1.AddCommand(1, c);
             }
         }
-
+        */
         private void button12_Click(object sender, EventArgs e)
         {
             this.cell_test_mode = false;
             
         }
-
+        /*
         private void cmdManager1_OnStopEvent()
         {
             if (Varlist["gOPC.Input.power"].Value == false)
@@ -1402,9 +1376,9 @@ namespace Tiara
         {
             coordsTableAdapter.Update(this.dbTiaraDataSet3);
         }
-
+        */
         private bool TEmode = false;
-
+/*
         private void btnTE_Click(object sender, EventArgs e)
         {
             if (!TEmode)
@@ -1424,16 +1398,16 @@ namespace Tiara
                 stacker1_OnCellSelect(stacker1.SelectedCellNumber);
             }
         }
-
+        */
         private void cbProducts_TextChanged(object sender, EventArgs e)
         {
             //productlistBindingSource1.Filter = "name Like '%" + cbProducts.Text + "%'";
         }
 
-        private int index;
+  /*      private int index;
         private string actual;
         private string found;
-        private int stridx;
+        private int stridx;*/
 
         private void cbProducts_KeyUp(object sender, KeyEventArgs e)
         {/*
@@ -1490,7 +1464,7 @@ namespace Tiara
             dbTiaraDataSet.Tables["productlist"].Rows.Add(0, newdetal.Text);
             dataGridView2.Refresh();
         }
-
+        /*
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (tbDetalFilter.Text == "Фильтр деталей")
@@ -1499,12 +1473,12 @@ namespace Tiara
             cbProducts.Refresh();
             
         }
-
+        */
         private void tbDetalFilter_KeyDown(object sender, KeyEventArgs e)
         {
             
         }
-
+        /*
         private void tbDetalFilter_Click(object sender, EventArgs e)
         {
             if (tbDetalFilter.Text == "Фильтр деталей")
@@ -1512,5 +1486,49 @@ namespace Tiara
             productlistBindingSource1.Filter = "name Like '%" + tbDetalFilter.Text + "%'";
             cbProducts.Refresh();
         }
+        */
+        private void productlistBindingSource1_DataSourceChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void productlistBindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            
+        }
+
+        private void productsBindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            productsTableAdapter1.Update(this.ProductsDataSet);
+        }
+
+        private void coordsBindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+
+        }
+
+        private void dgvSearch_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 5)
+            {
+                //dgvSearch.Rows[e.RowIndex].Cells[
+                int cellno = Convert.ToInt32(dgvSearch.Rows[e.RowIndex].Cells[0].Value.ToString());
+                int stackerno = Convert.ToInt32(dgvSearch.Rows[e.RowIndex].Cells[4].Value.ToString());
+                switch (stackerno)
+                { 
+                    case 1:
+                        stackerBox2.SelectCell(cellno);
+                        stackerBox2.TakeFrom(cellno);
+                        this.tabControl1.SelectedIndex = 0; 
+                        break;
+                    case 2:
+                        
+                        this.tabControl1.SelectedIndex = 1; 
+                        break;
+                }
+                //stacker1.SelectCell(cellno);
+                
+            }
+        }//
     }
 }

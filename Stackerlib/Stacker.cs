@@ -23,6 +23,8 @@ namespace Stackerlib
     public delegate bool isReady();
     // клик по квадрату штабелера
     public delegate void OnClickStacker();
+    // определяется есть ли что-нибудь на штабелере
+    public delegate int OnGetOnStackerDelegate();
 
     public partial class Stacker : UserControl
     {
@@ -119,6 +121,7 @@ namespace Stackerlib
                 {
                     String[] arr1 = value.Split(new Char[] { ',' });
                     fCellsNextPass = new List<CellPassInfo>();
+                    
                     foreach (String cellstr in arr1)
                     {
                         String[] arr2 = cellstr.Split(new Char[] { ':' });
@@ -180,10 +183,25 @@ namespace Stackerlib
         private DataGridViewCellStyle InputStyle;
         public DataGridViewCellStyle StyleInput { get { return InputStyle; } }
 
+        public int getTotalWidth()
+        {
+            int borders;
+            if (this.fGroup > 1)
+                borders = ((this.fRows / this.fGroup)-1) * 3 + 6;
+            else
+                borders = 6;
+            return dgvRackRight.Width+borders;
+        }
+
+        public int getTotalHeight()
+        {
+            return dgvRackRight.Height + dgvRackRight.Height + panel1.Height + 6;            
+        }
+
         void init_component()
         {
             dgvRackLeft.Columns.Clear();
-            dgvRackRight.Columns.Clear();
+            dgvRackRight.Columns.Clear();            
 
             this.PoddonStyle = new DataGridViewCellStyle();
             this.PoddonStyle.BackColor = Color.FromArgb(181, 206, 231);
@@ -247,6 +265,7 @@ namespace Stackerlib
 
             pnl_zahvat.Height = 4;
             pnl_zahvat.Top = pnlStacker.Height / 2 - pnl_zahvat.Height / 2;
+           
         }
 
         // нумеровать ячейки
@@ -339,6 +358,20 @@ namespace Stackerlib
                 if (this.fPoddonCells == null) this.fPoddonCells = new int[0];
                 if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
                 {
+                    // ячейка куда можно класть                   
+                    dgvc.BackColor = this.PoddonStyle.BackColor;
+                }
+                else
+                {
+                    if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
+                        dgvc.BackColor = this.InputStyle.BackColor;
+                    else
+                        dgvc.BackColor = Color.FromArgb(255, 255, 255);
+                }
+                /*
+
+                if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
+                {
                     // ячейка куда можно класть
                     if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
                         dgvc.BackColor = this.InputStyle.BackColor;
@@ -347,7 +380,7 @@ namespace Stackerlib
 
                 }
                 else
-                    dgvc.BackColor = Color.FromArgb(255, 255, 255);
+                    dgvc.BackColor = Color.FromArgb(255, 255, 255);*/
                 this.dgvRackLeft.Rows[ca.y].Cells[ca.x].Style = dgvc;
             }
             else if (ca.rack == 1)
@@ -361,15 +394,16 @@ namespace Stackerlib
                 if (this.fPoddonCells == null) this.fPoddonCells = new int[0];
                 if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
                 {
-                    // ячейка куда можно класть
+                        // ячейка куда можно класть                   
+                        dgvc.BackColor = this.PoddonStyle.BackColor;                   
+                }
+                else
+                {
                     if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
                         dgvc.BackColor = this.InputStyle.BackColor;
                     else
-                        dgvc.BackColor = this.PoddonStyle.BackColor;
-
+                        dgvc.BackColor = Color.FromArgb(255, 255, 255);
                 }
-                else
-                    dgvc.BackColor = Color.FromArgb(255, 255, 255);
                 this.dgvRackRight.Rows[ca.y].Cells[ca.x].Style = dgvc;
             }
         }
@@ -411,7 +445,8 @@ namespace Stackerlib
         {
             if (this.DesignMode)
                 init_component();
-            walk_cell_styles();  
+            walk_cell_styles();
+            this.refresh();
         }
         // Свойство текущая выделенная ячейка
         public int SelectedCellNumber {
@@ -429,7 +464,7 @@ namespace Stackerlib
         {
             Array.Sort(fCellsInput);
             int res = Array.BinarySearch(fCellsInput, cellnum);
-            return (res > -1)&&(is_poddon(cellnum));
+            return (res > -1);//&&(is_poddon(cellnum));
         }
 
         [DisplayName("Таблица координат")]
@@ -552,23 +587,31 @@ namespace Stackerlib
         // освежить данные о ячейках
         public void refresh()
         {
-            for (int c = 0; c <= maxcell; c++ )
+            try
             {
-                if (c == 330)
-                { 
-                
-                }
-                if (OnGetCellCountDelegate_hndlr(c) > 0)
+                // detect cell content
+                for (int c = 0; c <= maxcell; c++)
                 {
+                    if (c == 330)
+                    {
 
-                    this.SetCellOccupied(c);
+                    }
+                    if (OnGetCellCountDelegate_hndlr(c) > 0)
+                    {
+
+                        this.SetCellOccupied(c);
+                    }
+                    else
+                    {
+                        this.SetCellFree(c);
+                    }
                 }
-                else
-                {
-                    this.SetCellFree(c);
-                }
+                // detect stacker content
+                if (OnGetOnStackerDelegate_hndlr != null)
+                    TriggerStacker((OnGetOnStackerDelegate_hndlr() > 0));
             }
-           
+            catch (Exception exc)
+            { }
         }
         // выделить ячейку
         public void SelectCell(int ncell)
@@ -661,6 +704,23 @@ namespace Stackerlib
             remove { lock (this) { OnGetCellCountDelegate_hndlr -= value; } }
         }
 
+        private OnGetOnStackerDelegate OnGetOnStackerDelegate_hndlr;
+        [DisplayName("Получение числа продуктов в тележке")]
+        [Description("Функция-событие, возвращающая сколько продуктов на тележке")]
+        public event OnGetOnStackerDelegate OnGetTelezhkaCount
+        {
+            add { lock (this) { 
+                OnGetOnStackerDelegate_hndlr += value;
+                if (!DesignMode)
+                {
+                    if (OnGetOnStackerDelegate_hndlr != null)
+                        TriggerStacker((OnGetOnStackerDelegate_hndlr() > 0));
+                }
+            } }
+            remove { lock (this) { OnGetOnStackerDelegate_hndlr -= value; } }
+        }
+
+
         public struct CellAddr{
             public int rack;
             public int x;
@@ -712,23 +772,28 @@ namespace Stackerlib
         // Установить ячейку по стилю занятой
         public void SetCellOccupied(int ncell)
         {
-            CellAddr caddr = CellAddrs[ncell];
-            // цвет занятых ячеек
-            Color OccupiedColor = Color.FromArgb(255, 0, 0);
-            if(caddr.rack==0)
+            try
             {
-                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style;
-                if (dgvc.ForeColor == OccupiedColor) return;
-                dgvc.ForeColor = OccupiedColor;
-                dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style = dgvc;                
+                CellAddr caddr = CellAddrs[ncell];
+                // цвет занятых ячеек
+                Color OccupiedColor = Color.FromArgb(255, 0, 0);
+                if (caddr.rack == 0)
+                {
+                    DataGridViewCellStyle dgvc = dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style;
+                    if (dgvc.ForeColor == OccupiedColor) return;
+                    dgvc.ForeColor = OccupiedColor;
+                    dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style = dgvc;
+                }
+                else
+                {
+                    DataGridViewCellStyle dgvc = dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style;
+                    if (dgvc.ForeColor == OccupiedColor) return;
+                    dgvc.ForeColor = OccupiedColor;
+                    dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style = dgvc;
+                }
             }
-            else
-            {
-                DataGridViewCellStyle dgvc = dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style;
-                if (dgvc.ForeColor == OccupiedColor) return;
-                dgvc.ForeColor = OccupiedColor;
-                dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style = dgvc;  
-            }
+            catch (Exception exc)
+            { }
         }
         // установить стили ячеек
         private void walk_cell_styles()

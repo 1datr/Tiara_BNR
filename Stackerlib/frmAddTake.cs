@@ -62,5 +62,13 @@ namespace StackerLib
             this.Top = Screen.PrimaryScreen.WorkingArea.Height / 2 - this.Height / 2;
             this.Height = 70;
         }
+
+        private void tbCount_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button1.PerformClick();
+            }
+        }
     }
 }

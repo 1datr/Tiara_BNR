@@ -94,12 +94,15 @@ namespace StackerLib
                 }
             }
             catch (System.Exception ex)
-            { }
+            {
+                ShowStatus("Fatal error: " + ex.Message);
+            }
         }
 
         private void ShowStatus(String status_str)
         {
-            tsl_error.Text = status_str;
+            this.tsl_error.Text = status_str;
+            LogMes(this.tsl_error.Text);
         }
 
         private int f_StackerID = 1;
@@ -108,7 +111,81 @@ namespace StackerLib
         public int StackerID
         {
             get { return f_StackerID; }
-            set { f_StackerID = value; }
+            set { 
+                f_StackerID = value;
+                if (!DesignMode)
+                {
+                    if(service==null)
+                        Connect_Service(this.Servname + f_StackerID.ToString());
+                    else if(!service.IsConnected)
+                        Connect_Service(this.Servname + f_StackerID.ToString());
+                }
+            }
+        }
+
+        private void load(int cell) // загрузка из ячейки
+        {
+            lock (this)
+            {
+                this.TableProducts.Filter = "(cell_id=" + cell.ToString() + ") AND (stacker_id=" + f_StackerID.ToString() + ")";
+
+
+                for (int i = 0; i < this.TableProducts.Count; i++)
+                {
+                    DataRowView currentRow = (DataRowView)this.TableProducts.Current;
+                    currentRow["cell_id"] = -1;
+                    currentRow["changed"] = DateTime.Now;                    
+                    this.TableProducts.MoveNext();
+                    
+                    //Rows[i].AcceptChanges();                   
+                }
+
+                LogMes("Взято из ячейки " + cell.ToString());
+                /*
+                ProductsDataSet.Tables["products"].AcceptChanges();                
+                ProductsDataSet.AcceptChanges();
+                productsTableAdapter1.Update(ProductsDataSet);
+                */
+
+                /*  this.dbTiaraDataSet.products.AcceptChanges();
+                  dbTiaraDataSet.AcceptChanges();*/
+//                this.bsProductlist.Filter = bsProductlist.Filter;
+                //productlistTableAdapter.Update(this.dbTiaraDataSet4);
+                stacker1.refresh();
+            }
+        }
+
+        private void unload(int cell)   // выгрузка в ячейку
+        {
+            lock (this)
+            {
+
+                this.TableProducts.Filter = "(cell_id=-1) AND (stacker_id=" + f_StackerID.ToString() + ")";
+                //DataRow[] Rows = ProductsDataSet.Tables["products"].Select("(cell_id=-1) AND (stacker_id=1)");
+
+                for (int i = 0; i < this.TableProducts.Count; i++)
+                {
+                    DataRowView currentRow = (DataRowView)this.TableProducts.Current;
+                    currentRow["cell_id"] = cell;
+                    currentRow["changed"] = DateTime.Now;
+                    this.TableProducts.MoveNext();
+
+                    //  Rows[i].AcceptChanges();                    
+                }
+                LogMes("Помещено в ячейку " + cell.ToString());
+                /*
+                ProductsDataSet.Tables["products"].AcceptChanges();
+                ProductsDataSet.AcceptChanges();
+                productsTableAdapter1.Update(ProductsDataSet);
+                */
+                /*
+                this.dbTiaraDataSet.products.AcceptChanges();
+                dbTiaraDataSet.AcceptChanges();*/
+               
+                //productlistTableAdapter.Update(this.dbTiaraDataSet4);
+                stacker1.refresh();
+
+            }
         }
 
         private void Connect_CPU(object sender, PviEventArgs e)
@@ -121,10 +198,21 @@ namespace StackerLib
             cpu.Connection.DeviceType = DeviceType.TcpIp;
             /*   cpu.Connection.TcpIp.DestinationIpAddress = "127.0.0.1";
                cpu.Connection.TcpIp.DestinationPort = 11160;*/
-            cpu.Connection.TcpIp.DestinationIpAddress = ConfigurationManager.AppSettings["PLC_IP_" + f_StackerID.ToString()];
-            cpu.Connection.TcpIp.DestinationPort = short.Parse(ConfigurationManager.AppSettings["PLC_PORT_" + f_StackerID.ToString()]);
+
+         /*   cpu.Connection.TcpIp.pa .CpuParameterString = ConfigurationManager.AppSettings["CPUPARAMS_" + f_StackerID.ToString()];
+            cpu.Connection.TcpIp.DeviceParameterString = ConfigurationManager.AppSettings["DEVPARAMS_" + f_StackerID.ToString()];
+          */
+          //  cpu.Connection.conn = ConfigurationManager.AppSettings["PLC_IP_" + f_StackerID.ToString()];
+
+            cpu.Connection.Device.UpdateCpuParameters(ConfigurationManager.AppSettings["CPUPARAMS_" + f_StackerID.ToString()]);
+            cpu.Connection.Device.UpdateDeviceParameters(ConfigurationManager.AppSettings["DEVPARAMS_" + f_StackerID.ToString()]);
             /*
-            cpu.Connection.TcpIp.DestinationIpAddress = "192.168.1.200";
+            cpu.Connection.TcpIp.DestinationIpAddress = ConfigurationManager.AppSettings["PLC_IP_" + f_StackerID.ToString()];
+            cpu.Connection.TcpIp.SourceStation = 99;
+            cpu.Connection.TcpIp.LocalPort = uint.Parse(ConfigurationManager.AppSettings["PLC_PORT_" + f_StackerID.ToString()]);
+            cpu.Connection.TcpIp.DestinationPort = short.Parse(ConfigurationManager.AppSettings["PLC_PORT_" + f_StackerID.ToString()]);
+            */
+         /*   cpu.Connection.TcpIp.DestinationIpAddress = "192.168.1.200";
             cpu.Connection.TcpIp.DestinationPort = 11159;*/
             //cpu.Connection.Serial.Channel = 1;
             cpu.Error += new PviEventHandler(ConnectionError);
@@ -162,7 +250,7 @@ namespace StackerLib
             AddVar("gOPC.Output.drivestatus");
             AddVar("gOPC.Output.power");
             AddVar("gOPC.Output.Mode");
-
+            
             AddVar("gModule1"); // 12 входов с датчиков
             AddVar("gModule2");  //
             AddVar("gModule3"); // 12 выходов на исполнительных устройств
@@ -174,7 +262,7 @@ namespace StackerLib
 
             AddVar("gModule12"); // 12 входов с датчиков
             AddVar("gModule13"); // 12 входов с датчиков
-
+            
             AddVar("gOPC.Input.ack");
             AddVar("gOPC.Input.driveack");
             AddVar("gOPC.Input.start");
@@ -182,7 +270,7 @@ namespace StackerLib
             AddVar("gOPC.Input.dst_cell");
             AddVar("gOPC.Input.command");
             AddVar("gOPC.Input.power");
-
+            
         }
 
         private void variables_Connected(object sender, PviEventArgs e)
@@ -225,19 +313,28 @@ namespace StackerLib
 
         private string stacker_error_text(int errcode)
         {
-            this.BS_Errors.Filter = "err_id=" + errcode.ToString();
-            if (this.BS_Errors.Current == null) return null;
-            DataRowView currentRow = (DataRowView)this.BS_Errors.Current;
-            return currentRow["err_text"].ToString();
+            try
+            {
+                this.BS_Errors.Filter = "err_id=" + errcode.ToString();
+                if (this.BS_Errors.Current == null) return null;
+                DataRowView currentRow = (DataRowView)this.BS_Errors.Current;
+                return currentRow["err_text"].ToString();
 
-
+            }
+            catch (System.Exception exc)
+            {
+                return "";
+            }
         }
+
+        public string status_text;
 
         private void ConnectionError(object sender, PviEventArgs e)
         {
             try
             {
-                this.tsl_error.Text = String.Format("Error:{0}", e.ErrorText);
+                status_text  = String.Format("Error:{0} ({1})", e.ErrorText, e.ErrorCode);               
+                ShowStatus(status_text);
 
                 out_cpu_state();
            /*     if (!service.IsConnected) service.Connect();
@@ -246,7 +343,7 @@ namespace StackerLib
             }
             catch (System.Exception ex)
             {
-                this.tsl_error.Text = ex.Message;
+                ShowStatus("Fatal error: " + ex.Message);
             }
             //Application.Exit();
         }
@@ -273,20 +370,21 @@ namespace StackerLib
                         switch (status)
                         {
                             case 0:
-                                tsl_error.Text = "Штабелер готов к выполнению команды";
+                                ShowStatus("Штабелер готов к выполнению команды");
                                 this.cmdManager1.EndCommand();
                                 break;
-                            case 1: tsl_error.Text = "Штабелер находиться в состоянии выполнения команды"; break;
-                            case 2: tsl_error.Text = "Штабелер не готов выполненять команду"; break;
+                            case 1: ShowStatus("Штабелер находиться в состоянии выполнения команды"); break;
+                            case 2: ShowStatus("Штабелер не готов выполненять команду"); break;
                             default:
                                 {
-                                    tsl_error.Text = "Ошибка " + status.ToString() + ". " + stacker_error_text(status); break;
+                                    ShowStatus("Ошибка " + status.ToString() + ". " + stacker_error_text(status)); break;
 
                                 }
                         }
-                        LogMes(tsl_error.Text);
+                        LogMes(this.tsl_error.Text);
                         if (gb_commands.Enabled)
                         {
+                            if (CurrCmd == null) CurrCmd = new Command();
                             CurrCmd.cmdid = 0;
                             CurrCmd.operand1 = 0;
                             CurrCmd.operand2 = 0;
@@ -434,8 +532,8 @@ namespace StackerLib
         }
 
         private String f_logpath = "events.log";
-        [DisplayName("Размер ячейки")]
-        [Description("Размер ячейки в пикселях")]
+        [DisplayName("Лог событий")]
+        [Description("Файл лога событий")]
         public String Logpath 
         {
             get { return f_logpath; }
@@ -444,15 +542,23 @@ namespace StackerLib
 
         private void LogMes(String mes)
         {
-            String logpath = f_logpath ;
-               using (System.IO.StreamWriter w = System.IO.File.AppendText(
-           System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) + "\\" + logpath))
-               {
-                   w.WriteLine("--------------------");
-                   w.WriteLine(DateTime.Now);
-                   w.WriteLine(mes);
-                   w.Close();
-               }
+            try
+            {
+                String logpath = f_logpath;
+                using (System.IO.StreamWriter w = System.IO.File.AppendText(
+            System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) + "\\" + logpath))
+                {
+                    w.WriteLine("--------------------");
+                    w.WriteLine(DateTime.Now);
+                    w.WriteLine(mes);
+                    w.Close();
+                }                
+                console.Text = "--------------------" + Environment.NewLine + console.Text;
+                console.Text = DateTime.Now + " : " + mes + Environment.NewLine + console.Text;
+            }
+            catch (System.Exception ex)
+            { 
+            }
         }
 
 
@@ -604,11 +710,17 @@ namespace StackerLib
                 this.ColDetalTel.ValueMember = "id";
 
                 fTableProductlist_for_combo = new BindingSource();
-                fTableProductlist_for_combo.DataSource = this.fTableProductlist.DataSource;
+                fTableProductlist_for_combo.DataSource = this.fTableProductlist.DataSource;                
 
                 cbProducts.DataSource = value;
                 cbProducts.DisplayMember = "name";
                 cbProducts.ValueMember = "id";
+
+                cbTelezhkaProducts.DataSource = this.fTableProductlist.DataSource;
+
+                cbTelezhkaProducts.DataSource = value;
+                cbTelezhkaProducts.DisplayMember = "name";
+                cbTelezhkaProducts.ValueMember = "id";
             }
         }
 
@@ -678,16 +790,12 @@ namespace StackerLib
         private bool TEmode = false;
         private void stacker1_OnCellSelect(int cellno)
         {
-            //dgvProdList.DataSource = this.TableProducts;
+            this.currcell = stacker1.SelectedCellNumber;
 
             this.tabChoosenCell.Text = "Ячейка " + cellno.ToString();
             this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=" + cellno.ToString();
             addDetailGroup.Enabled = (stacker1.is_input(cellno)) || TEmode;
-            //sqdt_productlist.Update();
-            //productsBindingSource.ResumeBinding();
-            //  productsBindingSource1.Filter = "cell_id = " + cellno;
-
-            //dgvProdList.ReadOnly = !(stacker1.is_poddon(cellno));
+           
             Take.Visible = (stacker1.is_input(cellno) || TEmode);
             Push.Visible = (stacker1.is_poddon(cellno) || TEmode);
 
@@ -698,14 +806,96 @@ namespace StackerLib
 
         private void stacker1_OnClickStacker()
         {
+            /*
             tabCellinfo.SelectedIndex = 1;
+            dgvTelezhka.AllowUserToDeleteRows = TEmode;
+            this.TelezhkaGroup.Enabled = TEmode;
+
+            this.currcell = stacker1.SelectedCellNumber;*/
+
+           
+            this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=-1";
+            TelezhkaGroup.Enabled = TEmode;
+
+            Take.Visible = TEmode;
+            Push.Visible = TEmode;
+
+            tabCellinfo.SelectedIndex = 1;
+            
+        }
+
+        // Парковать
+        private void Park()
+        {
+            cmdExecuting = true;
+            Varlist["gOPC.Input.command"].Value = 0;
+            Varlist["gOPC.Input.start"].Value = true;
+            CurrCmd.cmdid = 0;
+            CurrCmd.operand1 = -1;
+            CurrCmd.operand2 = -1;
+        }
+        // Парковать
+        private void Trans(int cellfrom, int cellto)
+        {
+            cmdExecuting = true;
+            Varlist["gOPC.Input.command"].Value = 3;
+            Varlist["gOPC.Input.src_cell"].Value = cellfrom;
+            Varlist["gOPC.Input.dst_cell"].Value = cellto;
+            Varlist["gOPC.Input.start"].Value = true;
+            CurrCmd.cmdid = 3;
+            CurrCmd.operand1 = cellfrom;
+            CurrCmd.operand2 = cellto;
+        }
+        // Взять из ячейки
+        public void TakeFrom(int cell)
+        {
+            try
+            {
+                cmdExecuting = true;
+                Varlist["gOPC.Input.command"].Value = 1;
+                Varlist["gOPC.Input.src_cell"].Value = cell;
+                Varlist["gOPC.Input.start"].Value = true;
+                CurrCmd.cmdid = 1;
+                CurrCmd.operand1 = cell;
+                CurrCmd.operand2 = -1;
+            }
+            catch (System.Exception exc)
+            {
+                this.tsl_error.Text = "Fatal error: " + exc.Message;
+            }
+        }
+        // Положить в ячейку
+        public void PutTo(int cell)
+        {
+            try
+            {
+                cmdExecuting = true;
+                Varlist["gOPC.Input.command"].Value = 2;
+                Varlist["gOPC.Input.dst_cell"].Value = cell;
+                Varlist["gOPC.Input.start"].Value = true;
+                CurrCmd.cmdid = 2;
+                CurrCmd.operand1 = -1;
+                CurrCmd.operand2 = cell;
+            }
+            catch (System.Exception exc)
+            {
+                ShowStatus("Fatal error: " + exc.Message);
+            }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Vnc VNCform = new Vnc();
-            VNCform.VNC_IP = ConfigurationManager.AppSettings["PLC_IP_" + f_StackerID.ToString()];
+            try
+            {
+                Vnc VNCform = new Vnc();
+
+                VNCform.VNC_IP = this.cpu.Connection.TcpIp.DestinationIpAddress;
             VNCform.Show();
+             }
+            catch (System.Exception exc)
+            {
+                ShowStatus( "Fatal error: " + exc.Message);
+            }
         }
 
         private bool auth()
@@ -724,14 +914,30 @@ namespace StackerLib
                 {
                     TEmode = true;
                     btnTE.Text = "Обычное редактирование";
-                    stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+                    if (tabCellinfo.SelectedIndex == 0)
+                    {
+                        
+                        stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+                    }
+                    else if (tabCellinfo.SelectedIndex == 1)
+                    {
+                        stacker1_OnClickStacker();
+                    }
                 }
             }
             else
             {
                 TEmode = false;
                 btnTE.Text = "Тотальное редактирование";
-                stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+                if (tabCellinfo.SelectedIndex == 0)
+                {
+
+                    stacker1_OnCellSelect(stacker1.SelectedCellNumber);
+                }
+                else if (tabCellinfo.SelectedIndex == 1)
+                {
+                    stacker1_OnClickStacker();
+                }
             }
         }
 
@@ -745,10 +951,22 @@ namespace StackerLib
             switch (tabCellinfo.SelectedIndex)
             {
                 case 0:
+
                     DT_Products_Telezhka.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=" + stacker1.SelectedCellNumber.ToString();
+
+                    addDetailGroup.Enabled = (stacker1.is_input(this.currcell)) || TEmode;
+                    //sqdt_productlist.Update();
+                    //productsBindingSource.ResumeBinding();
+                    //  productsBindingSource1.Filter = "cell_id = " + cellno;
+
+                    //dgvProdList.ReadOnly = !(stacker1.is_poddon(cellno));
+                    Take.Visible = (stacker1.is_input(this.currcell) || TEmode);
+                    Push.Visible = (stacker1.is_poddon(this.currcell) || TEmode);
                     break;
                 case 1:
+
                     DT_Products_Telezhka.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id = -1";
+                    TelezhkaGroup.Enabled = (stacker1.is_input(this.currcell)) || TEmode;
                     break;
             }
         }
@@ -781,7 +999,7 @@ namespace StackerLib
             }
         }
 
-        private String fServname = "serv1";
+        private String fServname = "serv";
         [DisplayName("Имя сервиса")]
         [Description("Имя сервиса PVI")]
         public String Servname {
@@ -793,15 +1011,8 @@ namespace StackerLib
         private bool loaded = false;
         private void StackerBox_Layout(object sender, LayoutEventArgs e)
         {
-            
-            if ((layout_first) && (!this.DesignMode) && (loaded))
-            {
-                
-                CurrCmd = new Command();
-                layout_first = false;
-
-                Connect_Service(fServname);
-            }
+           // CorrectSizes();
+           
             
         }
 
@@ -828,7 +1039,7 @@ namespace StackerLib
             catch (System.Exception ex) { }
         }
 
-        private void Trans()
+        public void Trans()
         {
             try
             {
@@ -856,30 +1067,37 @@ namespace StackerLib
 
         private void btnPower_Click(object sender, EventArgs e)
         {
-            if (power)
+            try
             {
-                if (Varlist["gOPC.Input.power"].Value == false)
+                if (power)
                 {
-                    Varlist["gOPC.Input.power"].Value = true;
-                    System.Threading.Thread.Sleep(1000);
-                    Varlist["gOPC.Input.power"].Value = false;
-                }
-                else
-                    Varlist["gOPC.Input.power"].Value = false;
+                    if (Varlist["gOPC.Input.power"].Value == false)
+                    {
+                        Varlist["gOPC.Input.power"].Value = true;
+                        System.Threading.Thread.Sleep(1000);
+                        Varlist["gOPC.Input.power"].Value = false;
+                    }
+                    else
+                        Varlist["gOPC.Input.power"].Value = false;
 
-            }
-            else
-            {
-                if (Varlist["gOPC.Input.power"].Value == true)
-                {
-                    Varlist["gOPC.Input.power"].Value = false;
-                    System.Threading.Thread.Sleep(1000);
-                    Varlist["gOPC.Input.power"].Value = true;
                 }
                 else
-                    Varlist["gOPC.Input.power"].Value = true;
+                {
+                    if (Varlist["gOPC.Input.power"].Value == true)
+                    {
+                        Varlist["gOPC.Input.power"].Value = false;
+                        System.Threading.Thread.Sleep(1000);
+                        Varlist["gOPC.Input.power"].Value = true;
+                    }
+                    else
+                        Varlist["gOPC.Input.power"].Value = true;
+                }
             }
+            catch (System.Exception exc)
+            { }
         }
+
+        private int currcell = 0;
 
         private void button9_Click(object sender, EventArgs e)
         {
@@ -887,6 +1105,7 @@ namespace StackerLib
 
             try
             {
+                currcell = this.stacker1.SelectedCellNumber;
                 String oldfilter = this.TableProducts.Filter;
                 this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=" + stacker1.SelectedCellNumber.ToString() + " AND product_id=" + cbProducts.SelectedValue.ToString();
                 int thecount = this.TableProducts.Count;
@@ -922,9 +1141,56 @@ namespace StackerLib
                 }
 
                 dgvProdList.Refresh();
+                stacker1.refresh();
+                stacker1.SelectCell(this.currcell);
             }
             catch (System.Exception ex)
             { }
+        }
+
+        private string cmdManager1_OnGetCmdCaption(int cmd, int op1, int op2)
+        {
+            switch (cmd)
+            {
+                case 0: return "Парковать";
+                case 1: return "Взять";
+                case 2: return "Положить";
+                case 3: return "Переложить";
+            }
+            return default(string);
+        }
+
+        private bool cmdManager1_OnExe(int cmd, int op1, int op2)
+        {
+
+
+            Varlist["gOPC.Input.command"].Value = cmd;
+            if (op1 != -1)
+                Varlist["gOPC.Input.src_cell"].Value = op1;
+            if (op2 != -1)
+                Varlist["gOPC.Input.dst_cell"].Value = op2;
+            Varlist["gOPC.Input.start"].Value = true;
+
+            LogMes(String.Format("Запущена команда {0}({1}{2})", cmd, op1, op2));
+            return default(bool);
+        }
+
+        private bool cmdManager1_OnGetReady(int cmd, int op1, int op2)
+        {
+            try
+            {
+                return (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0);
+            }
+            catch (System.Exception exc)
+            {
+                return true;
+            }
+        }
+
+       
+        public void SelectCell(int cellid)
+        {
+            stacker1.SelectCell(cellid);
         }
 
         private void dgvProdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -933,6 +1199,8 @@ namespace StackerLib
             if (!stacker1.is_poddon(stacker1.SelectedCellNumber) && !this.TEmode) return;
             if (e.ColumnIndex == 0)
             {
+                this.currcell = stacker1.SelectedCellNumber;
+
                 frmAddTake frm = new frmAddTake();
 
                 frm.SetMode(true);
@@ -947,9 +1215,14 @@ namespace StackerLib
                     dgvProdList.Refresh();
                     LogMes(String.Format("Добавлено {0} деталей {1} в ячейку {2}.", frm.count, dgvProdList.Rows[e.RowIndex].Cells[0].FormattedValue.ToString(), stacker1.SelectedCellNumber));
                 }
+
+                this.stacker1_OnCellSelect(this.currcell);
+                timer_refresh.Start();
             }
             else if (e.ColumnIndex == 1)
             {
+                this.currcell = stacker1.SelectedCellNumber;
+
                 frmAddTake frm = new frmAddTake();
 
                 frm.SetMode(false);
@@ -975,7 +1248,11 @@ namespace StackerLib
                         dgvProdList.Refresh();
                     }
                 }
+
+                this.stacker1_OnCellSelect(this.currcell);
+                timer_refresh.Start();
             }
+            stacker1.refresh();
         }
 
         private void tbDetalFilter_TextChanged(object sender, EventArgs e)
@@ -988,8 +1265,233 @@ namespace StackerLib
 
         private void StackerBox_Load(object sender, EventArgs e)
         {
-            if(!DesignMode)
-                loaded = true;
+          /*  if (!DesignMode)
+            {
+                           
+
+                if (layout_first)
+                {
+
+                    CurrCmd = new Command();
+                    layout_first = false;
+
+                    stacker1.Refresh();
+
+                    Connect_Service(fServname);
+               }
+            }*/
         }
+
+        private void timer_refresh_Tick(object sender, EventArgs e)
+        {
+            cbProducts.Refresh();
+            stacker1.SelectCell(this.currcell);
+            timer_refresh.Enabled = false;
+        }
+
+        private void tbProdCount_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button_add.PerformClick();
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (tbTelezhkaProducts.Text == "Фильтр деталей")
+                tbTelezhkaProducts.Text = "";
+            TableProductlist.Filter = "name Like '%" + tbTelezhkaProducts.Text + "%'";
+            tbTelezhkaProducts.Refresh();
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // добавить деталь
+
+            try
+            {
+                currcell = this.stacker1.SelectedCellNumber;
+                String oldfilter = this.TableProducts.Filter;
+                this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=-1 AND product_id=" + cbProducts.SelectedValue.ToString();
+                int thecount = this.TableProducts.Count;
+                this.TableProducts.Filter = oldfilter;
+                // DataRow[] Rows = dbTiaraDataSet.products.Select("stacker_id=1 AND cell_id=" + stacker1.SelectedCellNumber.ToString() + " AND product_id=" + cbProducts.SelectedValue.ToString());
+                if (thecount > 0)
+                {
+                    DataRowView currentRow = (DataRowView)this.TableProducts.Current;
+                    int adding = 0;
+                    if (tbProdCount.Text == "")
+                        adding = 1;
+                    else
+                        adding = Convert.ToInt32(tbProdCountTelezhka.Text);
+                    currentRow["count"] = Convert.ToInt32(currentRow["count"]) + adding;
+
+                    LogMes(String.Format("Добавлено {0} деталей {1} на тележку.", adding, cbProducts.Text, stacker1.SelectedCellNumber));
+                }
+                else
+                {
+                    DataRowView currentRow = (DataRowView)this.TableProducts.AddNew();
+                    currentRow["cell_id"] = -1;
+                    currentRow["stacker_id"] = this.f_StackerID;
+                    currentRow["changed"] = DateTime.Now;
+                    currentRow["product_id"] = Convert.ToInt32(cbProducts.SelectedValue.ToString());
+                    if (tbProdCountTelezhka.Text != "")
+                        /*   currentRow["count"] = 0;
+                       else*/
+                        currentRow["count"] = Convert.ToInt32(tbProdCountTelezhka.Text);
+                    if (Convert.ToInt32(currentRow["count"].ToString()) <= 0)
+                        this.TableProducts.RemoveCurrent();
+                    this.TableProducts.EndEdit();
+                    LogMes(String.Format("Добавлено {0} деталей {1} на тележку.", Convert.ToInt32(tbProdCountTelezhka.Text), cbProducts.Text));
+                }
+
+                dgvProdList.Refresh();
+                stacker1.refresh();
+                stacker1.SelectCell(this.currcell);
+            }
+            catch (System.Exception ex)
+            { }
+        }
+
+        private int stacker1_OnGetTelezhkaCount()
+        {
+            if (TableProducts == null)
+                return 0;
+            string oldfilter = TableProducts.Filter;
+            if (this.DesignMode) return 0;
+                // DataRow[] Rows = ProductsDataSet.Tables["products"].Select("stacker_id=1 AND cell_id = " + cellno);
+            this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id = -1";
+            int thecount = this.TableProducts.Count;
+            TableProducts.Filter = oldfilter;
+            return thecount;            
+        }
+
+       
+        private void cmdManager1_OnUnStopEvent()
+        {
+            // включить
+            if (Varlist["gOPC.Input.power"].Value == true)
+            {
+                Varlist["gOPC.Input.power"].Value = false;
+                System.Threading.Thread.Sleep(1000);
+                Varlist["gOPC.Input.power"].Value = true;
+            }
+            else
+                Varlist["gOPC.Input.power"].Value = true;
+
+
+            // квитировать
+            Kvit();
+
+        }
+
+        private void cmdManager1_OnExeCommand(string cmdstr, int op1, int op2)
+        {
+            LogMes(String.Format("Start execute command {0}({1}, {2})", cmdstr, op1, op2));
+        }
+
+        private void cmdManager1_OnAddCommand(string cmdstr, int op1, int op2)
+        {
+            LogMes(String.Format("Added command {0}({1}, {2})", cmdstr, op1, op2));
+        }
+
+        private void cmdManager1_OnStopEvent()
+        {
+            if (Varlist["gOPC.Input.power"].Value == false)
+            {
+                Varlist["gOPC.Input.power"].Value = true;
+                System.Threading.Thread.Sleep(1000);
+                Varlist["gOPC.Input.power"].Value = false;
+            }
+            else
+                Varlist["gOPC.Input.power"].Value = false;
+        }
+
+        private void cmdManager1_OnDeleteCommand(string cmdstr, int op1, int op2)
+        {
+            LogMes(String.Format("Deleted command {0}({1}, {2})", cmdstr, op1, op2));
+        }
+
+        private void CorrectSizes()
+        {
+           // if (this.DesignMode) return;
+            try
+            {
+                //
+                String str = ConfigurationManager.AppSettings["winwidth"];
+                int winwidth = Convert.ToInt32(str);
+                this.ParentForm.Width = winwidth;
+                //
+                str = ConfigurationManager.AppSettings["winheight"];
+                int winheight = Convert.ToInt32(str);
+                this.ParentForm.Height = winheight;
+                //
+                str = ConfigurationManager.AppSettings["D_SB_" + f_StackerID.ToString()];
+                int dist_split_base = Convert.ToInt32(str);
+               
+                /*int stackerwidth = stacker1.getTotalWidth() + stacker1.cellsize + 20;
+                int stackerheight = stacker1.getTotalHeight();
+                this.ParentForm.WindowState = FormWindowState.Maximized;
+                splitStacker.SplitterDistance = stackerheight + 6;
+                splitBase.SplitterDistance = stackerwidth + 10;
+                split_Stacker_Tools.SplitterDistance = stackerwidth + 10;*/
+            }
+            catch (System.Exception ex)
+            { }
+        }
+
+     
+
+        
+
+        private void stacker1_Resize(object sender, EventArgs e)
+        {
+            groupBox3.Width = stacker1.getTotalWidth();
+            groupBox3.Height = 3 + stacker1.getTotalHeight();
+            tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.AutoSize;
+           // splitLeft.SplitterDistance = 3 + stacker1.getTotalHeight() +tools_panel.Height;
+        }
+
+        private bool stacker1_OnIsReady()
+        {
+            try
+            {
+                return (System.Convert.ToInt32(this.VarVal("gOPC.Output.status")) == 0);
+            }
+            catch (System.Exception exc)
+            {
+                return false;
+            }
+        }
+
+        private int stacker1_OnCmdTake(Stackerlib.Stacker s)
+        {
+            try
+            {
+                cmdManager1.AddCommand(1,s.SelectedCellNumber);
+                return default(int);
+            }
+            catch (System.Exception ex) {
+                return 0;
+            }
+
+            
+        }
+
+        private int stacker1_OnCmdPut(Stackerlib.Stacker s)
+        {
+            try
+            {
+                cmdManager1.AddCommand(2, -1, s.SelectedCellNumber);
+                return default(int);
+            }
+            catch (System.Exception ex)
+            {
+                return 0;
+            }
+        }
+        
     }
 }

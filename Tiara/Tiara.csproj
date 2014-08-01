@@ -44,6 +44,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -213,7 +214,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Kirishi2\StackerLib\StackerLib.csproj">
+    <ProjectReference Include="..\StackerLib\StackerLib.csproj">
       <Project>{167745FE-9DBB-4576-B0C8-05044340F9D2}</Project>
       <Name>StackerLib</Name>
     </ProjectReference>
