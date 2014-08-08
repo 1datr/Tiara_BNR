@@ -996,8 +996,21 @@ namespace Stackerlib
             {
                 try
                 {
-                    selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
-                    exe_OnCellSelect(selected_cell_num);
+                    if (currdgv.SelectedCells[0].Value.ToString() != "")
+                    {
+                       // oldcellid = selected_cell_num;
+                        selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
+                        exe_OnCellSelect(selected_cell_num);
+                    }
+                    else
+                    {
+                        currdgv.SelectedCells[0].Selected = false;
+                        if (selected_cell_num != -1)
+                        {
+                            SelectCell(selected_cell_num);
+                        }
+
+                    }
                 }
                 catch (System.Exception ex)
                 { 
@@ -1006,25 +1019,46 @@ namespace Stackerlib
             }
         }
 
+        private int oldcellid = -1;
+
         private void dgvRackRight_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvRackRight.SelectedCells.Count > 0)
-                if(dgvRackRight.SelectedCells[0].Value==null)
-                {
-                    dgvRackRight.ClearSelection();
-                    return;
-                }
-
-            if (currdgv != null) 
-                if(currdgv!=dgvRackRight)
-                    currdgv.ClearSelection();
-            currdgv = dgvRackRight;
-
-            if (currdgv.SelectedCells.Count > 0)
+            try
             {
-                selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
-                exe_OnCellSelect(selected_cell_num);
+
+                if (dgvRackRight.SelectedCells.Count > 0)
+                    if (dgvRackRight.SelectedCells[0].Value == null)
+                    {
+                        dgvRackRight.ClearSelection();
+                        return;
+                    }
+
+                if (currdgv != null)
+                    if (currdgv != dgvRackRight)
+                        currdgv.ClearSelection();
+                currdgv = dgvRackRight;
+
+                if (currdgv.SelectedCells.Count > 0)
+                {
+                    if(currdgv.SelectedCells[0].Value.ToString()!="")
+                    {
+                        //oldcellid = selected_cell_num;
+                        selected_cell_num = System.Convert.ToInt32(currdgv.SelectedCells[0].Value);
+                        exe_OnCellSelect(selected_cell_num);
+                    }
+                    else
+                    {
+                        currdgv.SelectedCells[0].Selected = false;
+                        if(selected_cell_num!=-1)
+                        {
+                            SelectCell(selected_cell_num);
+                        }
+                        
+                    }
+                }
             }
+            catch (System.Exception excp)
+            { }
 
         }
 

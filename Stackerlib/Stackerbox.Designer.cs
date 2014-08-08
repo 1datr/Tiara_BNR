@@ -162,6 +162,7 @@
             // 
             this.splitConBase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitConBase.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitConBase.IsSplitterFixed = true;
             this.splitConBase.Location = new System.Drawing.Point(0, 0);
             this.splitConBase.Name = "splitConBase";
             // 
