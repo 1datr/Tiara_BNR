@@ -99,10 +99,20 @@ namespace StackerLib
             }
         }
 
+        delegate void ShowStatusDelegate(string text);
+
         private void ShowStatus(String status_str)
         {
-            this.tsl_error.Text = status_str;
-            LogMes(this.tsl_error.Text);
+            if (!InvokeRequired)
+            {
+                this.tsl_error.Text = status_str;
+                LogMes(this.tsl_error.Text);
+            }
+            else
+            {
+                BeginInvoke(new ShowStatusDelegate(ShowStatus), new object[] { status_str });
+            }
+            
         }
 
         private int f_StackerID = 1;
@@ -116,6 +126,8 @@ namespace StackerLib
                 if (!DesignMode)
                 {
                     if(service==null)
+                     
+
                         Connect_Service(this.Servname + f_StackerID.ToString());
                     else if(!service.IsConnected)
                         Connect_Service(this.Servname + f_StackerID.ToString());
@@ -502,11 +514,13 @@ namespace StackerLib
             {
                 btnPower.ForeColor = Color.LightGreen;
                 btnPower.Text = "ON";
+                btnPower.Enabled = false;
             }
             else
             {
                 btnPower.ForeColor = Color.DarkGray;
                 btnPower.Text = "OFF";
+                btnPower.Enabled = true;
             }
 
             // All vars output
@@ -588,6 +602,7 @@ namespace StackerLib
             set
             {
                 stacker1.Rows = value;
+              //  bwStackerRefresh.RunWorkerAsync();
             }
         }
         // 
@@ -602,6 +617,7 @@ namespace StackerLib
             set
             {
                 stacker1.Floors = value;
+            //    bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -616,6 +632,7 @@ namespace StackerLib
             set
             {
                 stacker1.Group = value;
+              //  bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -630,6 +647,7 @@ namespace StackerLib
             set
             {
                 stacker1.CellsNextPass = value;
+             //   bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -644,6 +662,7 @@ namespace StackerLib
             set
             {
                 stacker1.PoddonCells = value;
+             //   bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -658,6 +677,7 @@ namespace StackerLib
             set
             {
                 stacker1.InputCells = value;
+             //   bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -681,7 +701,7 @@ namespace StackerLib
                 fTableCoords = value;
                 if (fTableCoords != null)
                     stacker1.TableCoords = fTableCoords;
-
+              //  bwStackerRefresh.RunWorkerAsync();
             }
         }
 
@@ -716,11 +736,11 @@ namespace StackerLib
                 cbProducts.DisplayMember = "name";
                 cbProducts.ValueMember = "id";
 
-                cbTelezhkaProducts.DataSource = this.fTableProductlist.DataSource;
+                cbTelezhProducts.DataSource = this.fTableProductlist.DataSource;
 
-                cbTelezhkaProducts.DataSource = value;
-                cbTelezhkaProducts.DisplayMember = "name";
-                cbTelezhkaProducts.ValueMember = "id";
+                cbTelezhProducts.DataSource = value;
+                cbTelezhProducts.DisplayMember = "name";
+                cbTelezhProducts.ValueMember = "id";
             }
         }
 
@@ -748,6 +768,13 @@ namespace StackerLib
         
         private BindingSource DT_Products_CurrCell;
         private BindingSource DT_Products_Telezhka;
+
+        private void products_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            stacker1.refresh();
+        }//
+
+        private bool event_setted = false;
         
         [DisplayName("Таблица продуктов")]
         [Description("Таблица продуктов по ячейкам")]
@@ -768,12 +795,17 @@ namespace StackerLib
                  
                 dgvTelezhka.DataSource = DT_Products_Telezhka;
 
-                
+              /*  if(!event_setted)
+                    DT_Products_CurrCell.ListChanged += new ListChangedEventHandler(products_ListChanged);
+                */
+                event_setted = true;
 
                 if (value != null)
                 {
                     DT_Products_Telezhka.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id = -1";               
                 }
+
+               // stacker1.refresh();
             }
         }
 
@@ -781,15 +813,18 @@ namespace StackerLib
         {
             if (this.DesignMode) return 0;
             // DataRow[] Rows = ProductsDataSet.Tables["products"].Select("stacker_id=1 AND cell_id = " + cellno);
-            this.TableProducts.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id = " + cellno.ToString();
-            return this.TableProducts.Count; 
+            this.DT_Products_CurrCell.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id = " + cellno.ToString();
+            return this.DT_Products_CurrCell.Count; 
           
             
         }
 
         private bool TEmode = false;
+        private int last_cell_id = -1;
         private void stacker1_OnCellSelect(int cellno)
         {
+            last_cell_id = cellno;
+
             this.currcell = stacker1.SelectedCellNumber;
 
             this.tabChoosenCell.Text = "Ячейка " + cellno.ToString();
@@ -819,6 +854,8 @@ namespace StackerLib
 
             Take.Visible = TEmode;
             Push.Visible = TEmode;
+
+            dgvTelezhka.DataSource = TableProducts;
 
             tabCellinfo.SelectedIndex = 1;
             
@@ -890,12 +927,12 @@ namespace StackerLib
                 Vnc VNCform = new Vnc();
 
                 VNCform.VNC_IP = this.cpu.Connection.TcpIp.DestinationIpAddress;
-            VNCform.Show();
-             }
+                VNCform.Show();
+            }
             catch (System.Exception exc)
             {
-                ShowStatus( "Fatal error: " + exc.Message);
-            }
+                MessageBox.Show("Fatal error: " + exc.Message, "Ошибка");
+            }           
         }
 
         private bool auth()
@@ -940,26 +977,17 @@ namespace StackerLib
                 }
             }
         }
-
+        // Смена вкладки
         private void tabCellinfo_TabIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void tabCellinfo_Selecting(object sender, TabControlCancelEventArgs e)
         {
             switch (tabCellinfo.SelectedIndex)
             {
                 case 0:
 
-                    DT_Products_Telezhka.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=" + stacker1.SelectedCellNumber.ToString();
+                    DT_Products_Telezhka.Filter = "stacker_id=" + this.f_StackerID.ToString() + " AND cell_id=" + this.last_cell_id.ToString();
 
                     addDetailGroup.Enabled = (stacker1.is_input(this.currcell)) || TEmode;
-                    //sqdt_productlist.Update();
-                    //productsBindingSource.ResumeBinding();
-                    //  productsBindingSource1.Filter = "cell_id = " + cellno;
 
-                    //dgvProdList.ReadOnly = !(stacker1.is_poddon(cellno));
                     Take.Visible = (stacker1.is_input(this.currcell) || TEmode);
                     Push.Visible = (stacker1.is_poddon(this.currcell) || TEmode);
                     break;
@@ -969,6 +997,11 @@ namespace StackerLib
                     TelezhkaGroup.Enabled = (stacker1.is_input(this.currcell)) || TEmode;
                     break;
             }
+        }
+
+        private void tabCellinfo_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+           
         }
 
         private void Kvit()
@@ -1099,7 +1132,7 @@ namespace StackerLib
 
         private int currcell = 0;
 
-        private void button9_Click(object sender, EventArgs e)
+        private void Click_add_detail(object sender, EventArgs e)
         {
             // добавить деталь
 
@@ -1262,6 +1295,8 @@ namespace StackerLib
             TableProductlist.Filter = "name Like '%" + tbDetalFilter.Text + "%'";
             cbProducts.Refresh();
         }
+
+
 
         private void StackerBox_Load(object sender, EventArgs e)
         {
@@ -1450,7 +1485,7 @@ namespace StackerLib
         {
             groupBox3.Width = stacker1.getTotalWidth();
             groupBox3.Height = 3 + stacker1.getTotalHeight();
-            tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.AutoSize;
+           
            // splitLeft.SplitterDistance = 3 + stacker1.getTotalHeight() +tools_panel.Height;
         }
 
@@ -1492,6 +1527,76 @@ namespace StackerLib
                 return 0;
             }
         }
+
+        delegate void refresh_stacker_delegate();
+
+        private void refresh_stacker()
+        {
+            if (!this.InvokeRequired || this.DesignMode)
+            {
+                stacker1.refresh();
+            }
+            else
+                if (this.IsHandleCreated)
+                {
+                    BeginInvoke(new refresh_stacker_delegate(refresh_stacker), new object[] { });
+                }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                
+            }
+            catch (System.Exception exc)
+            {
+                MessageBox.Show("Fatal error: " + exc.Message, "Ошибка");
+            }
+        }
+
+        public void refresh()
+        {
+            stacker1.refresh();
+        }
+
+        private void tableLayoutPanel1_Layout(object sender, LayoutEventArgs e)
+        {
+            if(!bwStackerRefresh.IsBusy)
+            bwStackerRefresh.RunWorkerAsync();
+        }
+
+        private void tbProdCount_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblMode_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbProdCountTelezhka_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stacker1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void stacker1_Layout(object sender, LayoutEventArgs e)
+        {
+            stacker1.refresh();
+        }
+
+        private void splitConBase_Panel1_Layout(object sender, LayoutEventArgs e)
+        {
+
+        }
+
+       
         
     }
 }

@@ -6,42 +6,61 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using BR.AN.PviServices;
-using System.Xml;
-using System.Xml.Linq;
-using System.Data.SqlClient;
-using System.Configuration;
 
-namespace StackerLib
+namespace Stackerlib
 {
-    public partial class TableBox : Component
+    public partial class TableBox : UserControl
     {
         public TableBox()
         {
             InitializeComponent();
         }
 
-        public TableBox(IContainer container)
+        private void tabCellinfo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            container.Add(this);
 
-            InitializeComponent();
         }
 
-        [DisplayName("BindingSource")]
-        [Description("BindingSource таблицы")]
-        public BindingSource BS { get; set; }
+        private void button_add_Click(object sender, EventArgs e)
+        {
 
-        [DisplayName("DataSet")]
-        [Description("DataSet таблицы")]
-        public global::System.ComponentModel.Component DS { get; set; }
+        }
 
-        [DisplayName("DataAdapter")]
-        [Description("DataAdapter таблицы")]
-        public global::System.ComponentModel.Component DA { get; set; }
+        private void button5_Click(object sender, EventArgs e)
+        {
 
-        [DisplayName("DataTable")]
-        [Description("DataTable таблицы")]
-        public global::System.ComponentModel.Component DT { get; set; }
+        }
+
+        private int f_StackerID = 1;
+        [DisplayName("ID штабелера")]
+        [Description("Номер штабелера")]
+        public int StackerID
+        {
+            get { return f_StackerID; }
+            set
+            {
+                f_StackerID = value;
+             /*   if (!DesignMode)
+                {
+                    if (service == null)
+
+
+                        Connect_Service(this.Servname + f_StackerID.ToString());
+                    else if (!service.IsConnected)
+                        Connect_Service(this.Servname + f_StackerID.ToString());
+                }*/
+            }
+        }
+
+        private Stacker f_stacker;
+        public Stacker c_stacker
+        {
+
+            get { return f_stacker; }
+            set {
+                c_stacker = value;
+                if (c_stacker != null) c_stacker.refresh();
+            }
+        }
     }
 }

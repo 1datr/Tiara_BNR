@@ -516,27 +516,9 @@ namespace Tiara
             this.productlistTableAdapter.Fill(this.dbTiaraDataSet.productlist);
             // TODO: данная строка кода позволяет загрузить данные в таблицу "dbTiaraDataSet.products". При необходимости она может быть перемещена или удалена.
             this.productsTableAdapter.Fill(this.dbTiaraDataSet.products);
-            /*
-            try
-            {
-                log = LogManager.GetCurrentClassLogger();
 
-                log.Trace("Version: {0}", Environment.Version.ToString());
-                log.Trace("OS: {0}", Environment.OSVersion.ToString());
-                log.Trace("Command: {0}", Environment.CommandLine.ToString());
-
-                NLog.Targets.FileTarget tar = (NLog.Targets.FileTarget)LogManager.Configuration.FindTargetByName("run_log");
-                tar.DeleteOldFileOnStartup = false;
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Ошибка работы с логом!\n" + ex.Message);
-            }
-           */
-           // logger = LogManager.GetCurrentClassLogger();
-            /*
-            CurrCmd = new Command();
-            Connect_Service("serv1");*/
+            this.stackerBox2.refresh();
+            this.stackerBox1.refresh();
         }
 
         private void LogMes(String mes)
@@ -1529,6 +1511,21 @@ namespace Tiara
                 //stacker1.SelectCell(cellno);
                 
             }
+        }
+
+        private void stackerBox2_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void stackerBox2_Layout(object sender, LayoutEventArgs e)
+        {
+            
+        }
+
+        private void driveerrorsBindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+
         }//
     }
 }

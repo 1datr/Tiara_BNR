@@ -73,8 +73,19 @@
     <Compile Include="frmAuthSpec.Designer.cs">
       <DependentUpon>frmAuthSpec.cs</DependentUpon>
     </Compile>
+    <Compile Include="Legend.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Legend.Designer.cs">
+      <DependentUpon>Legend.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObjectCloner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="PropGridViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -100,8 +111,14 @@
       <DependentUpon>StackerBox.cs</DependentUpon>
     </Compile>
     <Compile Include="StackerCmd.cs" />
+    <Compile Include="StackMan.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StackMan.Designer.cs">
+      <DependentUpon>StackMan.cs</DependentUpon>
+    </Compile>
     <Compile Include="TableBox.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="TableBox.Designer.cs">
       <DependentUpon>TableBox.cs</DependentUpon>
@@ -123,6 +140,13 @@
     <EmbeddedResource Include="frmAuthSpec.resx">
       <DependentUpon>frmAuthSpec.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Legend.resx">
+      <DependentUpon>Legend.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Stacker.resx">
       <DependentUpon>Stacker.cs</DependentUpon>
     </EmbeddedResource>
@@ -131,6 +155,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StackerBox.resx">
       <DependentUpon>StackerBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StackMan.resx">
+      <DependentUpon>StackMan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableBox.resx">
+      <DependentUpon>TableBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Vnc.resx">
       <DependentUpon>Vnc.cs</DependentUpon>

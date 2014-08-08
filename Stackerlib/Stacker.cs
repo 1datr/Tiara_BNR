@@ -44,12 +44,35 @@ namespace Stackerlib
         public int cellsize {
             get{
                 return f_cellsize;
-            } 
-            set{
+            }
+            set
+            {
                 f_cellsize = value;
-                init_component();
+                if (this.legend != null) legend.refresh();
+                GroupColumns();
+                for (int i = 0; i < dgvRackLeft.Rows.Count; i++)
+                {
+                    dgvRackLeft.Rows[i].Height = f_cellsize;
+                }
+
+                for (int i = 0; i < dgvRackRight.Rows.Count; i++)
+                {
+                    dgvRackRight.Rows[i].Height = f_cellsize;
+                }
+                setsizes();
             }
         }
+
+        private TableBox fTB;
+        [DisplayName("Компонент таблиц")]
+        [Description("Компонент, выбирающий из таблиц содержимое ячеек")]   
+        public TableBox TB {
+            get { return fTB; }
+            set {
+                fTB = value;
+            }
+        }
+
         // STACKER rows
         private int fRows = 5;
         [DisplayName("Рядов")]
@@ -60,7 +83,55 @@ namespace Stackerlib
             }
             set {
                 fRows = value;
-                init_component();
+                
+                // left rack
+                if (fRows > dgvRackLeft.Columns.Count)
+                {
+                    DataGridViewTextBoxCell cellTemplate;
+                    cellTemplate = new DataGridViewTextBoxCell();
+                    cellTemplate.Style.BackColor = Color.White;
+                    cellTemplate.Style.ForeColor = Color.Black;
+                    
+                    
+                    while (dgvRackLeft.Columns.Count<fRows)
+                    {
+
+                        // 
+                        DataGridViewButtonColumn dgvc = new DataGridViewButtonColumn();
+                        dgvc.FlatStyle = FlatStyle.Popup;
+                        this.dgvRackLeft.Columns.Add(dgvc);
+                    }
+                }
+                else if (fRows < dgvRackLeft.Columns.Count)
+                {                    
+                    while(dgvRackLeft.Columns.Count>fRows)
+                    {
+                        dgvRackLeft.Columns.RemoveAt(dgvRackLeft.Columns.Count - 1);
+                    }
+                }
+                // right rack 
+                if (fRows > dgvRackRight.Columns.Count)
+                {
+
+                    while(dgvRackRight.Columns.Count<fRows)
+                    {
+                        DataGridViewButtonColumn dgvc = new DataGridViewButtonColumn();
+                        dgvc.FlatStyle = FlatStyle.Popup;
+
+                        this.dgvRackRight.Columns.Add(dgvc);
+                    }
+                }
+                else if (fRows < dgvRackRight.Columns.Count)
+                {
+                    while (dgvRackRight.Columns.Count > fRows)
+                    {
+                        dgvRackRight.Columns.RemoveAt(dgvRackRight.Columns.Count - 1);
+                    }
+                }
+
+                GroupColumns();
+                setsizes();
+                run_numerate();
             }
         }
         // 
@@ -73,8 +144,87 @@ namespace Stackerlib
             }
             set {
                 fFloors = value;
-                init_component();
+
+                
+                // left rack
+                if (dgvRackLeft.Columns.Count == 0)
+                {
+                    DataGridViewButtonColumn dgvc = new DataGridViewButtonColumn();
+                    dgvc.FlatStyle = FlatStyle.Popup;
+                    dgvRackLeft.Columns.Add(dgvc);
+                    fRows = 1;
+                }
+
+                if (fFloors > dgvRackLeft.Rows.Count)
+                {
+                    this.dgvRackLeft.Rows.Add(fFloors - dgvRackLeft.Rows.Count);
+                   
+                }
+                else if (fFloors < dgvRackLeft.Rows.Count)
+                {
+                    
+                    while(dgvRackLeft.Rows.Count > fFloors)
+                    {
+                        dgvRackLeft.Rows.RemoveAt(dgvRackLeft.Rows.Count - 1);
+                    }
+                }                
+
+                
+                // right rack 
+                if (dgvRackRight.Rows.Count == 0)
+                {
+                    DataGridViewButtonColumn dgvc = new DataGridViewButtonColumn();
+                    dgvc.FlatStyle = FlatStyle.Popup;                    
+                    dgvRackRight.Columns.Add(dgvc);
+                }
+
+                if (fFloors > dgvRackRight.Rows.Count)
+                {
+
+                    this.dgvRackRight.Rows.Add(fFloors - dgvRackRight.Rows.Count);
+                }
+                else if (fFloors < dgvRackRight.Rows.Count)
+                {
+                    while(dgvRackRight.Rows.Count > fFloors)
+                    {
+                        dgvRackRight.Rows.RemoveAt(dgvRackRight.Rows.Count - 1);
+                    }
+                }
+
+                for (int i = 0; i < dgvRackLeft.Rows.Count; i++)
+                {
+                    dgvRackLeft.Rows[i].Height = f_cellsize;
+                }
+
+                for (int i = 0; i < dgvRackRight.Rows.Count; i++)
+                {
+                    dgvRackRight.Rows[i].Height = f_cellsize;
+                }
+
+                setsizes();                               
+                numerate();
             }
+        }
+
+        private void setsizes()
+        {
+            // установка размеров элементов
+            //this.Width = dgvRackLeft.Columns.GetColumnsWidth(DataGridViewElementStates.None)+2;
+            int totalwidth = dgvRackLeft.Columns.GetColumnsWidth(DataGridViewElementStates.None);
+            panel1.Width = totalwidth;
+            // Left          
+            int height_left = dgvRackLeft.Rows.GetRowsHeight(DataGridViewElementStates.None);
+            dgvRackLeft.Height = height_left;
+            dgvRackLeft.Width = totalwidth;
+            // Right
+            //splitLow.Height = splitLow.Panel1.Height + dgvRackRight.Rows.GetRowsHeight(DataGridViewElementStates.None);
+            int height_right = dgvRackRight.Rows.GetRowsHeight(DataGridViewElementStates.None);
+            dgvRackRight.Height = height_right;
+            dgvRackRight.Width = totalwidth;
+
+            this.Width = totalwidth;
+            this.MaximumSize = new Size(totalwidth + 4, height_left + height_right + panel1.Height + 12);
+            this.MinimumSize = new Size(totalwidth + 4, height_left + height_right + panel1.Height + 12);
         }
 
         private int fGroup = 1;
@@ -89,19 +239,99 @@ namespace Stackerlib
             set
             {
                 fGroup = value;
-                init_component();
+                // group fields
+                GroupColumns();
+                setsizes();
+            }
+        }
+
+        private int fDelta = 2;
+        [DisplayName("Группировочная дельта")]
+        [Description("Разница в ширине между нормальной и граничной группирующей ячейкой")]
+        public int Delta
+        {
+            get
+            {
+                return fDelta;
+            }
+            set
+            {
+                fDelta = value;
+                // group fields
+                GroupColumns();
+                setsizes();
+            }
+        }
+
+        private void GroupColumns()
+        {
+            if (fGroup > 1)
+            {
+                int i = 1;
+                foreach (DataGridViewButtonColumn dgvc in dgvRackLeft.Columns)
+                {
+                    Padding pdng = dgvc.DefaultCellStyle.Padding;
+                    pdng.All = 0;
+                    if (((i % fGroup) == 0) && (i < dgvRackLeft.Columns.Count))
+                    {
+                        dgvc.Width = f_cellsize + fDelta;
+                        pdng.Right = fDelta;
+                    }
+                    else
+                    {
+                        dgvc.Width = f_cellsize;
+                    }
+                    dgvc.DefaultCellStyle.Padding = pdng;
+                    i++;
+                }
+                i = 1;
+                foreach (DataGridViewButtonColumn dgvc in dgvRackRight.Columns)
+                {
+                    Padding pdng = dgvc.DefaultCellStyle.Padding;
+                    pdng.All = 0;
+                    if (((i % fGroup) == 0) && (i < dgvRackLeft.Columns.Count))
+                    {
+                        dgvc.Width = f_cellsize + fDelta;
+                        pdng.Right = fDelta;
+                    }
+                    else
+                    {
+                        dgvc.Width = f_cellsize;
+                    }
+                    dgvc.DefaultCellStyle.Padding = pdng;
+                    i++;
+                }
+            }
+            else
+            {
+                foreach (DataGridViewColumn dgvc in dgvRackLeft.Columns)
+                {
+                    Padding pdng = dgvc.DefaultCellStyle.Padding;
+                    pdng.All = 0;
+                    dgvc.Width = f_cellsize;
+                    dgvc.DefaultCellStyle.Padding = pdng;
+                }
+
+                foreach (DataGridViewColumn dgvc in dgvRackRight.Columns)
+                {
+                    Padding pdng = dgvc.DefaultCellStyle.Padding;
+                    pdng.All = 0;
+                    dgvc.Width = f_cellsize;
+                    dgvc.DefaultCellStyle.Padding = pdng;
+                }
             }
         }
 
         private List<CellPassInfo> fCellsNextPass;
         [DisplayName("Ячейки с пропуском")]
-        [Description("Ячейки после которых пропустить нумерацию следующей")]
+        [Description("Ячейки, перед которыми будет пропущенно указанное число ячеек")]
         public String CellsNextPass
         {
             get
             {
                 String str = "";
                 int i = 0;
+                if (fCellsNextPass != null)
                 foreach (CellPassInfo ci in fCellsNextPass)
                 {
                     if (i > 0)
@@ -135,15 +365,18 @@ namespace Stackerlib
                         }
                     }
                     fCellsNextPass.Sort();
+                    run_numerate();
+                    setsizes();
                 }
                 catch (Exception e)
                 {
 
                 }
-                init_component();
+               
             }
         }
 
+       
         private int[] fPoddonCells = { };
         [DisplayName("Поддоны")]
         [Description("Массив поддонов")]
@@ -157,7 +390,8 @@ namespace Stackerlib
             {
                 fPoddonCells = value;
                 Array.Sort(fPoddonCells);
-                init_component();
+                numerate();
+                
             }
         }
 
@@ -174,14 +408,111 @@ namespace Stackerlib
             {
                 fCellsInput = value;
                 Array.Sort(fCellsInput);
-                init_component();
+                /*
+                foreach(int ci in fCellsInput)
+                {
+                    CellAddr ca = this.getCellIdxes(ci);
+                    SetCellInput(ca);
+                }*/
+                run_numerate();
+            }
+        }
+
+        private void SetCellEmpty(CellAddr caddr)
+        {
+            
+            if(caddr.rack==0) 
+            {
+                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style;
+                dgvc.ForeColor = Color.FromArgb(0xff, 0xff, 0xff);
+                dgvc.BackColor = Color.FromArgb(0xff, 0xff, 0xff);       
+                dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Value = "";
+            }
+            else
+            {
+                DataGridViewCellStyle dgvc = dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style;
+                dgvc.ForeColor = Color.FromArgb(0xff, 0xff, 0xff);
+                dgvc.BackColor = Color.FromArgb(0xff, 0xff, 0xff);    
+                dgvRackRight.Rows[caddr.y].Cells[caddr.x].Value = "";
+            }
+        }
+
+        private void SetCellInput(CellAddr caddr)
+        {
+
+            if (caddr.rack == 0)
+            {
+                if (caddr.y > dgvRackLeft.Rows.Count - 1) return;
+                if (caddr.x > dgvRackLeft.Columns.Count - 1) return;
+                DataGridViewCellStyle dgvc = dgvRackLeft.Rows[caddr.y].Cells[caddr.x].Style;
+                dgvc.ForeColor = InputStyle.ForeColor;
+                dgvc.BackColor = InputStyle.BackColor;
+            }
+            else
+            {
+                if (caddr.y > dgvRackRight.Rows.Count - 1) return;
+                if (caddr.x > dgvRackRight.Columns.Count - 1) return;
+                DataGridViewCellStyle dgvc = dgvRackRight.Rows[caddr.y].Cells[caddr.x].Style;
+                dgvc.ForeColor = InputStyle.ForeColor;
+                dgvc.BackColor = InputStyle.BackColor;
             }
         }
 
         private DataGridViewCellStyle PoddonStyle;
-        public DataGridViewCellStyle StylePoddon { get { return PoddonStyle; } }
+        [DisplayName("Стиль поддонов")]
+        [Description("Стиль поддонных ячеек")]
+        public DataGridViewCellStyle StylePoddon { 
+            get {
+                if (PoddonStyle == null)
+                {
+                    PoddonStyle = new DataGridViewCellStyle();
+                    this.PoddonStyle.BackColor = Color.FromArgb(181, 206, 231);
+                    if (this.legend != null) legend.refresh();
+                }                        
+                return PoddonStyle; 
+            }
+            set { 
+                PoddonStyle = value;
+                if (this.legend != null) legend.refresh();
+            }
+        }
+
+        public Legend legend;
+
         private DataGridViewCellStyle InputStyle;
-        public DataGridViewCellStyle StyleInput { get { return InputStyle; } }
+        [DisplayName("Стиль загрузочных ячеек")]
+        [Description("Стиль загрузочных ячеек")]
+        public DataGridViewCellStyle StyleInput { 
+            get {
+                if (InputStyle == null)
+                {
+                    InputStyle = new DataGridViewCellStyle();
+                    this.InputStyle.BackColor = Color.FromArgb(200, 252, 200);
+                    if (this.legend != null) legend.refresh();
+                }
+            
+                return InputStyle; 
+            }
+            set {
+                InputStyle = value;
+                if (this.legend != null) legend.refresh();
+            }
+        }
+
+        private Color fOccupiedColor;
+        [DisplayName("Цвет занятой ячейки")]
+        [Description("Цвет номеров полных ячеек")]
+        public Color OccupiedColor {
+            get {
+                if(fOccupiedColor == null)
+                    fOccupiedColor = Color.Red;
+                return fOccupiedColor; 
+            }
+            set { fOccupiedColor = value;
+                if (this.legend != null) legend.refresh();
+                run_numerate();
+            }
+        }
 
         public int getTotalWidth()
         {
@@ -198,75 +529,89 @@ namespace Stackerlib
             return dgvRackRight.Height + dgvRackRight.Height + panel1.Height + 6;            
         }
 
+        delegate void init_component_delegate();
+
         void init_component()
         {
             dgvRackLeft.Columns.Clear();
-            dgvRackRight.Columns.Clear();            
+            dgvRackRight.Columns.Clear();
 
             this.PoddonStyle = new DataGridViewCellStyle();
             this.PoddonStyle.BackColor = Color.FromArgb(181, 206, 231);
 
             this.InputStyle = new DataGridViewCellStyle();
             this.InputStyle.BackColor = Color.FromArgb(200, 252, 200);
-
+            
             // Set columns
+            
             for (int row = 0; row < fRows; row++)
-            {
-                DataGridViewButtonColumn col = new DataGridViewButtonColumn();
-                col.Width = f_cellsize;
-                col.FlatStyle = FlatStyle.Popup;
-                              
-                DataGridViewButtonColumn col2 = new DataGridViewButtonColumn();
-                col2.Width = f_cellsize;
-                col2.FlatStyle = FlatStyle.Popup;
-
-                if (fGroup > 1)
-                {
-                    if ((row+1) % fGroup == 0)
                     {
-                        if ((0 < row) & (row < fRows - 1))
+                        DataGridViewButtonColumn col = new DataGridViewButtonColumn();
+                        col.Width = f_cellsize;
+                        col.FlatStyle = FlatStyle.Popup;
+
+                        DataGridViewButtonColumn col2 = new DataGridViewButtonColumn();
+                        col2.Width = f_cellsize;
+                        col2.FlatStyle = FlatStyle.Popup;
+
+                        if (fGroup > 1)
                         {
-                            Padding pdng = col.DefaultCellStyle.Padding;
-                            pdng.Right = 4;
-                            col.DefaultCellStyle.Padding = pdng;
-                            col.Width += 4;
-                            col2.DefaultCellStyle.Padding = pdng;
-                            col2.Width += 4;
+                            if ((row + 1) % fGroup == 0)
+                            {
+                                if ((0 < row) & (row < fRows - 1))
+                                {
+                                    Padding pdng = col.DefaultCellStyle.Padding;
+                                    pdng.Right = 4;
+                                    col.DefaultCellStyle.Padding = pdng;
+                                    col.Width += 4;
+                                    col2.DefaultCellStyle.Padding = pdng;
+                                    col2.Width += 4;
+                                }
+                            }
                         }
+
+                        this.dgvRackLeft.Columns.Add(col);
+                        this.dgvRackRight.Columns.Add(col2);
+
+                        
                     }
-                }
+                    // Set rows
+                    dgvRackLeft.Rows.Add(fFloors - dgvRackLeft.Rows.Count);
+                    dgvRackRight.Rows.Add(fFloors - dgvRackRight.Rows.Count);
+                    for (int i = 0; i < dgvRackRight.Rows.Count; i++)
+                    {
+                        dgvRackLeft.Rows[i].Height = this.f_cellsize;
+                        dgvRackRight.Rows[i].Height = this.f_cellsize;
+            
+                    }
+                    // установка размеров элементов
+                    dgvRackLeft.Height = dgvRackLeft.Rows.GetRowsHeight(DataGridViewElementStates.None);
+                    dgvRackLeft.Width = dgvRackLeft.Columns.GetColumnsWidth(DataGridViewElementStates.None);
 
-                this.dgvRackLeft.Columns.Add(col);
-                this.dgvRackRight.Columns.Add(col2);
-            }
-            // Set rows
-            dgvRackLeft.Rows.Add(fFloors-dgvRackLeft.Rows.Count);
-            dgvRackRight.Rows.Add(fFloors-dgvRackRight.Rows.Count);
-            for (int i = 0; i < dgvRackRight.Rows.Count; i++)
-            {
-                dgvRackLeft.Rows[i].Height = this.f_cellsize;
-                dgvRackRight.Rows[i].Height = this.f_cellsize;
-            }
-            // установка размеров элементов
-            dgvRackLeft.Height = dgvRackLeft.Rows.GetRowsHeight(DataGridViewElementStates.None);
-            dgvRackLeft.Width = dgvRackLeft.Columns.GetColumnsWidth(DataGridViewElementStates.None);
+                    dgvRackRight.Height = dgvRackRight.Rows.GetRowsHeight(DataGridViewElementStates.None);
+                    dgvRackRight.Width = dgvRackRight.Columns.GetColumnsWidth(DataGridViewElementStates.None);
 
-            dgvRackRight.Height = dgvRackRight.Rows.GetRowsHeight(DataGridViewElementStates.None);
-            dgvRackRight.Width = dgvRackRight.Columns.GetColumnsWidth(DataGridViewElementStates.None);
+                    this.Width = dgvRackRight.Columns.GetColumnsWidth(DataGridViewElementStates.None);
 
-            this.Width = dgvRackRight.Columns.GetColumnsWidth(DataGridViewElementStates.None);
+                    this.Height = dgvRackLeft.Height + dgvRackRight.Height + 20;
 
-            this.Height = dgvRackLeft.Height + dgvRackRight.Height + 20;
+                    dgvRackRight.ClearSelection();
+                    // установить цифры
+                    // left
+                    run_numerate();
 
-            dgvRackRight.ClearSelection();
-            // установить цифры
-            // left
-            numerate();
+                    pnl_zahvat.Height = 4;
+                    pnl_zahvat.Top = pnlStacker.Height / 2 - pnl_zahvat.Height / 2;
 
-            pnl_zahvat.Height = 4;
-            pnl_zahvat.Top = pnlStacker.Height / 2 - pnl_zahvat.Height / 2;
-           
-        }
+                    if (this.legend != null) legend.refresh();
+
+                  //  setsizes();
+                   /* Rows = 5;
+                    Floors = 5;
+                    cellsize = 24;
+                    GroupColumns();
+                    setsizes();*/
+                }                       
 
         // нумеровать ячейки
 
@@ -340,13 +685,24 @@ namespace Stackerlib
 
                 NextCell(ref ca);
                 PassSomeCells(ref ca, ncell);
-                CellAddrs.Add(ncell, ca);
+                if(!CellAddrs.ContainsKey(ncell))
+                    CellAddrs.Add(ncell, ca);
                 return ca;
             }
         }
 
         private void printcell(CellAddr ca, int ncell, String celltext)
         {
+            if (PoddonStyle == null)
+            {
+                this.PoddonStyle = new DataGridViewCellStyle();
+                this.PoddonStyle.BackColor = Color.FromArgb(181, 206, 231);
+            }
+            if (InputStyle == null)
+            {
+                this.InputStyle = new DataGridViewCellStyle();
+                this.InputStyle.BackColor = Color.FromArgb(200, 252, 200);
+            }
             if (ca.rack == 0)
             {
                 if (ca.y > dgvRackLeft.Rows.Count - 1) return;
@@ -368,19 +724,7 @@ namespace Stackerlib
                     else
                         dgvc.BackColor = Color.FromArgb(255, 255, 255);
                 }
-                /*
-
-                if (Array.BinarySearch<int>(this.fPoddonCells, ncell) > -1)
-                {
-                    // ячейка куда можно класть
-                    if (Array.BinarySearch<int>(this.fCellsInput, ncell) > -1)
-                        dgvc.BackColor = this.InputStyle.BackColor;
-                    else
-                        dgvc.BackColor = this.PoddonStyle.BackColor;
-
-                }
-                else
-                    dgvc.BackColor = Color.FromArgb(255, 255, 255);*/
+                
                 this.dgvRackLeft.Rows[ca.y].Cells[ca.x].Style = dgvc;
             }
             else if (ca.rack == 1)
@@ -412,16 +756,40 @@ namespace Stackerlib
         // нумеровать ячейки
         private void numerate()
         {
-            CellAddrs = new Dictionary<int, CellAddr>();
-            maxcell = 2 * fFloors * fRows;
-            int ncell = 0;
-            while (ncell < maxcell)
+            try
             {
-                CellAddr ca = getAddr(ncell);
-                printcell(ca, ncell, ncell.ToString());
-                ncell++;
-            }
+                for (int y = 0; y < dgvRackLeft.Rows.Count; y++)
+                {
+                    for (int x = 0; x < dgvRackLeft.Columns.Count; x++)
+                    {
+                        dgvRackLeft.Rows[y].Cells[x].Value = "";
+                        dgvRackLeft.Rows[y].Cells[x].Style.BackColor = Color.White;
+                    }
+                }
 
+                for (int y = 0; y < dgvRackRight.Rows.Count; y++)
+                {
+                    for (int x = 0; x < dgvRackRight.Columns.Count; x++)
+                    {
+                        dgvRackRight.Rows[y].Cells[x].Value = "";
+                        dgvRackRight.Rows[y].Cells[x].Style.BackColor = Color.White;
+                    }
+                }
+
+                CellAddrs = new Dictionary<int, CellAddr>();
+                maxcell = 2 * fFloors * fRows;
+                int ncell = 0;
+                while (ncell < maxcell)
+                {
+
+                    CellAddr ca = getAddr(ncell);
+                    printcell(ca, ncell, ncell.ToString());
+                    ncell++;
+                }
+                refresh();
+            }
+            catch (System.Exception exc)
+            { }
         }
         
         private int maxcell;
@@ -438,15 +806,17 @@ namespace Stackerlib
 
         private void Stacker_Load(object sender, EventArgs e)
         {
-            init_component();
+         /*   if(!backgroundWorker1.IsBusy)
+                backgroundWorker1.RunWorkerAsync();*/
+
         }
 
         private void Stacker_Layout(object sender, LayoutEventArgs e)
         {
-            if (this.DesignMode)
-                init_component();
-            walk_cell_styles();
-            this.refresh();
+
+            setsizes();
+            
+           
         }
         // Свойство текущая выделенная ячейка
         public int SelectedCellNumber {
@@ -552,26 +922,7 @@ namespace Stackerlib
         public void SetZ(int z)
         {
             // 1350
-            /* ymax - this.cellwidth* fFloors
-             * ycurr - y
-             * 
-             * y = curr_y_pos*this.cellsize*fFloors/ymax
-             * 
-             * zmax - y 
-             * zcurr - z
-             * 
-             * 
-             */
-
-            /*
-            int y_ = curr_y_pos * this.cellsize * fFloors / 4670;
-
-            int panel_y = y_ * z / 1350;
-            pnlStacker.Top = fFloors*cellsize + panel_y;
-             * 
-             1270 - pnlStacker.Height/2
-             CurrZ - Z
-             */
+            
             try
             {
             pnl_zahvat.Width = pnlStacker.Width - 1;
@@ -587,15 +938,12 @@ namespace Stackerlib
         // освежить данные о ячейках
         public void refresh()
         {
+            if (OnGetOnStackerDelegate_hndlr == null) return;
             try
             {
                 // detect cell content
                 for (int c = 0; c <= maxcell; c++)
-                {
-                    if (c == 330)
-                    {
-
-                    }
+                {             
                     if (OnGetCellCountDelegate_hndlr(c) > 0)
                     {
 
@@ -691,8 +1039,14 @@ namespace Stackerlib
         [Description("Событие при выделении ячейки")]      
         public event OnCellSelectDelegate OnCellSelect
         {
-            add { lock (this) { OnCellSelect_hndlr += value; } }
-            remove { lock (this) { OnCellSelect_hndlr -= value; } }
+            add { lock (this) { 
+                OnCellSelect_hndlr += value;
+                refresh();
+            } }
+            remove { lock (this) { 
+                OnCellSelect_hndlr -= value;
+                refresh();
+            } }
         }
 
         private OnGetCellCountDelegate OnGetCellCountDelegate_hndlr;
@@ -929,7 +1283,7 @@ namespace Stackerlib
 
         private void pnlStacker_Paint(object sender, PaintEventArgs e)
         {
-
+            
         }
 
         private OnClickStacker OnClickStacker_hndlr;
@@ -964,10 +1318,28 @@ namespace Stackerlib
                 OnClickStacker_hndlr();
             }
         }
+
+        delegate void dlg_numerate();
+
+        private void run_numerate()
+        {
+            if(!bwNumerate.IsBusy)
+            bwNumerate.RunWorkerAsync();
+        }
+
+        private void bwNumerate_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (this.InvokeRequired)
+                this.Invoke(new dlg_numerate(numerate), new object[] { });
+            else
+                numerate();
+        }
+
+        
     }
 
     // информация о пропускаемых ячейках
-    public class CellPassInfo
+    public class CellPassInfo : IComparable<CellPassInfo>
     {
         public int cell { get; set; }
         public int passcount { get; set; }
@@ -975,6 +1347,19 @@ namespace Stackerlib
         {
             this.cell = cell;
             this.passcount = count;
+        }
+
+        public int CompareTo(CellPassInfo obj) 
+        {
+            if (obj == null) return 1;
+            return this.cell.CompareTo(obj.cell);
+        }
+
+        public int Compare(CellPassInfo x, CellPassInfo y)
+        {
+            // Compare y and x in reverse order.             
+
+            return y.CompareTo(x);
         }
     }
 }

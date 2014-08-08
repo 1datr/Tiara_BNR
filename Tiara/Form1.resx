@@ -129,8 +129,8 @@
   <metadata name="dbTiaraDataSet3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 169</value>
   </metadata>
-  <metadata name="productlistBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
+  <metadata name="productlistBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>332, 88</value>
   </metadata>
   <metadata name="productsBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>141, 135</value>
@@ -162,11 +162,11 @@
   <metadata name="coordsBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>159, 169</value>
   </metadata>
-  <metadata name="productlistBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>332, 88</value>
-  </metadata>
   <metadata name="productsBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>488, 169</value>
+  </metadata>
+  <metadata name="productlistBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 56</value>
   </metadata>
   <metadata name="bsProductlist.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>268, 17</value>
@@ -211,31 +211,26 @@
     <value>17, 208</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>100</value>
+    <value>160</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAABMLAAATCwAAAAAAAAAA
-        AAAAAAAAAAAAAKbNjSF7ukiOW6sV0FSnB+VUpwbmVKcG5lSnBuZUpwXmVKcG5l6sGM54uEWKnsmEIAAA
-        AAAAAAAAAAAAALbXnUBUpw3oSqMA/0yjAP9KogD/SqIA/0qiAP9KogD/SqIA/0qiAP9LowD/S6MA/1Sn
-        Due62qFDAAAAANLmxx5drBTpS6MA/0ujAP9lsB7/fb1B/369Q/9+vUP/fr1D/369Qv99vED/ZbAe/0uj
-        AP9MowD/W6sR7dDlwyGKwVqNR6EA/0ujAP+FwU//rdWI/4rDWf+Kw1b/i8RW/4vEVv+Kw1X/isNZ/6rT
-        g/+EwE7/S6MA/0ehAP+IwViRX60X1kujAP9ksB7/q9SF/02kAf9IoQD/R6EA/0ehAP9HoQD/R6EA/0ih
-        AP9MpAD/qtOE/2axIP9LowD/YK0a01OnBOpKowD/fbxA/43FWf9IoQD/UaYA/1mqDP9grhb/YK4W/16t
-        E/9SpgH/SKEA/4zEV/9/vUT/SqIA/1OnBOdUpwXpSqMA/3y8P/+NxFf/R6EA/1iqC/+02JH/ns1z/5/O
-        c/+UyGL/U6cD/0iiAP+LxFX/f71D/0qjAP9RpgDoVKcF6UqjAP98vD//jcRY/0ehAP9grRb/os53/0qi
-        AP9NpAD/TaQA/1GmAP9JogD/i8RW/3+9Q/9KowD/UaYA6FSnBelKowD/fLw//43EWP9HoQD/YK0W/6LP
-        eP9KogD/TaQA/02kAP9OpAD/RaAA/4rEVf+BvkX/SqMA/1GmAOhUpwXpSqMA/3y8P/+NxFf/R6EA/1iq
-        C/+02JL/oc53/6LPd/+iz3f/oc92/53Ndv+32pf/dLg0/0ujAP9RpgDoU6cE6UqjAP99vED/jsVa/0ih
-        AP9RpgD/WKoL/1+tFf9frRX/X60V/1+tFf9frRX/XKsQ/1GmAf9RpgD/UaYA6GGuGtNLowD/ZLAe/6vU
-        hP9NpAH/SKEA/0ihAP9HoQD/R6EA/0ehAP9HoQD/R6EA/0ehAP9JogD/SaIA/0miAOiLwluNR6EA/0uj
-        AP+Cv0z/q9SE/4vDW/+LxFb/i8RV/4vEVf+LxFX/i8RV/4vEVf+LxFX/i8RV/4vEVf+LxFXo0eTDH1ur
-        EexMowD/S6MA/2WwHf98vED/fbxA/3y8P/98vD//fLw//3y8P/98vD//fLw//3y8P/98vD//fLw/6AAA
-        AAC42J5DVagO6UujAP9MowD/SqMA/0qiAP9KowD/SqMA/0qjAP9KowD/SqMA/0qjAP9KowD/SqMA/0qj
-        AO0AAAAAAAAAAJ7KgyJytTyNXKsV0VSnBehUpwXpVKcF6VSnBelUpwXpVKcF6VSnBelUpwXpVKcF6VSn
-        BelUpwXU4AcAAMADAACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA
-        AADAAP//4AD//w==
+        AAABAAEAEBAAAAEAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADu6ebk3dr//f3////////////9/vzg2dby7ery6ebn4dz27+zQycb++fjFvb79+/qQVFSUU1Lr3uD+
+        /v7////////h2NS9p6LHuri6p6LIvbm8pqHGvbp6ZWfEu7j////+/v6iYmGRVFDx7On+/v7w6uW+raTR
+        zM3Pw8PRzM2noKXPzcyFfoPRzczw7Ov///+OVVSZXV2hZGKYVVLv4uC3o57QzMu5rrDRzcx+dHrRzcyP
+        iIvRzMv9/f3////////++fqhYF+fWVmcX13PrafRzM18cHDPysuAeXzQzMutr6/Szcr/////////////
+        //+PZWakXFyhYWCIWlnWzs6RXV3RzM2PiozV0dDe3t7Uz87////////////////////7+/uhYWCSVlfO
+        raqRXmLWzs6Kc3HU0tL29vbW0c7///////////////////////+GeHmaXGKiX2KTYGSpg4OMeXzS0NCC
+        fXzSzs3////////////////////////////MxMWsZmaccHanYWKRdHeeb3GPh4jNy8ugpaj9/f3/////
+        //////////////////////////uZYF6OgIGeYV+ZkJPWzMWvrK7//v/i5+r/////////////////////
+        ///////////9//+iYmF/eX6waWyfoaH7//7JxMb////+/v7////////////////////////////////7
+        +/ujYF+xqq+FVVHLw8T////w8vL////////////////////////////////////////9//+hZGLHwsP/
+        /v7j4eD////+/v7////////////////////////////////////////9//+aXVvj3N/7/f359/f/////
+        //////////////////////////////////////////////+jfoDs6un////+/v7/////////////////
+        ///////////////////////////////////6+Pf6+Pj///////////////////////8AAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 </value>
   </data>
 </root>

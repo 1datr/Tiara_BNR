@@ -32,13 +32,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabStacker1 = new System.Windows.Forms.TabPage();
             this.stackerBox2 = new StackerLib.StackerBox();
             this.driveerrorsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dbTiaraDataSet = new Tiara.dbTiaraDataSet();
             this.stackererrorsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dbTiaraDataSet3 = new Tiara.dbTiaraDataSet3();
-            this.productlistBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.productlistBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.productsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ProductsDataSet = new Tiara.dbTiaraDataSet1();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -100,9 +100,10 @@
             this.countDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.changedDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.productidDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.productlistBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.productsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.tabStacker2 = new System.Windows.Forms.TabPage();
+            this.productlistBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.bsProductlist = new System.Windows.Forms.BindingSource(this.components);
             this.bsPoddon = new System.Windows.Forms.BindingSource(this.components);
             this.productsTableAdapter1 = new Tiara.dbTiaraDataSet1TableAdapters.productsTableAdapter();
@@ -117,13 +118,14 @@
             this.coordsTableAdapter = new Tiara.dbTiaraDataSet3TableAdapters.coordsTableAdapter();
             this.productsTableAdapter2 = new Tiara.dbTiaraDataSet2TableAdapters.productsTableAdapter();
             this.productsBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
+            this.stackerBox1 = new StackerLib.StackerBox();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabStacker1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.driveerrorsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stackererrorsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProductsDataSet)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -149,8 +151,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource1)).BeginInit();
+            this.tabStacker2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsProductlist)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsPoddon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet2)).BeginInit();
@@ -162,72 +165,61 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabStacker1);
+            this.tabControl1.Controls.Add(this.tabStacker2);            
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1252, 634);
+            this.tabControl1.Size = new System.Drawing.Size(1252, 696);
             this.tabControl1.TabIndex = 10;
             // 
-            // tabPage1
+            // tabStacker1
             // 
-            this.tabPage1.Controls.Add(this.stackerBox2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1244, 608);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Штабелер";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabStacker1.Controls.Add(this.stackerBox2);
+            this.tabStacker1.Location = new System.Drawing.Point(4, 22);
+            this.tabStacker1.Name = "tabStacker1";
+            this.tabStacker1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStacker1.Size = new System.Drawing.Size(1244, 670);
+            this.tabStacker1.TabIndex = 0;
+            this.tabStacker1.Text = "Штабелер 1";
+            this.tabStacker1.UseVisualStyleBackColor = true;
             // 
             // stackerBox2
             // 
+            this.stackerBox2.AutoSize = true;
             this.stackerBox2.BS_DriveErrors = this.driveerrorsBindingSource;
             this.stackerBox2.BS_Errors = this.stackererrorsBindingSource;
-            this.stackerBox2.cellsize = 24;
-            this.stackerBox2.CellsNextPass = "204,257,274,291,308,325,342,359,376,381";
+            this.stackerBox2.cellsize = 25;
+            this.stackerBox2.CellsNextPass = "1:11,253:12";
             this.stackerBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stackerBox2.Floors = 6;
-            this.stackerBox2.Group = 3;
+            this.stackerBox2.Floors = 12;
+            this.stackerBox2.Group = 1;
             this.stackerBox2.InputCells = new int[] {
-        198,
-        209};
+        0};
             this.stackerBox2.Location = new System.Drawing.Point(3, 3);
             this.stackerBox2.Logpath = "events.log";
             this.stackerBox2.Name = "stackerBox2";
             this.stackerBox2.PASSWORD = "1234";
-            this.stackerBox2.PoddonCells = new int[] {
-        251,
-        262,
-        268,
-        279,
-        285,
-        296,
-        302,
-        313,
-        319,
-        330,
-        336,
-        347,
-        353,
-        364,
-        370};
-            this.stackerBox2.Rows = 33;
+            this.stackerBox2.PoddonCells = new int[0];
+            this.stackerBox2.Rows = 22;
             this.stackerBox2.Servname = "serv1";
-            this.stackerBox2.Size = new System.Drawing.Size(1238, 602);
+            this.stackerBox2.Size = new System.Drawing.Size(1238, 664);
             this.stackerBox2.StackerID = 1;
             this.stackerBox2.TabIndex = 0;
             this.stackerBox2.TableCoords = this.dbTiaraDataSet3.coords;
-            this.stackerBox2.TableProductlist = this.productlistBindingSource;
+            this.stackerBox2.TableProductlist = this.productlistBindingSource1;
             this.stackerBox2.TableProducts = this.productsBindingSource;
+            this.stackerBox2.Load += new System.EventHandler(this.stackerBox2_Load);
+            this.stackerBox2.Layout += new System.Windows.Forms.LayoutEventHandler(this.stackerBox2_Layout);
             // 
             // driveerrorsBindingSource
             // 
             this.driveerrorsBindingSource.DataMember = "drive_errors";
             this.driveerrorsBindingSource.DataSource = this.dbTiaraDataSet;
+            this.driveerrorsBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.driveerrorsBindingSource_ListChanged);
             // 
             // dbTiaraDataSet
             // 
@@ -244,17 +236,18 @@
             this.dbTiaraDataSet3.DataSetName = "dbTiaraDataSet3";
             this.dbTiaraDataSet3.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // productlistBindingSource
+            // productlistBindingSource1
             // 
-            this.productlistBindingSource.DataMember = "productlist";
-            this.productlistBindingSource.DataSource = this.dbTiaraDataSet;
-            this.productlistBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.productlistBindingSource_ListChanged);
+            this.productlistBindingSource1.DataMember = "productlist";
+            this.productlistBindingSource1.DataSource = this.dbTiaraDataSet;
+            this.productlistBindingSource1.Sort = "name";
+            this.productlistBindingSource1.DataSourceChanged += new System.EventHandler(this.productlistBindingSource1_DataSourceChanged);
             // 
             // productsBindingSource
             // 
             this.productsBindingSource.DataMember = "products";
             this.productsBindingSource.DataSource = this.ProductsDataSet;
-            this.productsBindingSource.Filter = "stacker_id=1 AND cell_id = -1";
+            this.productsBindingSource.Filter = "stacker_id=1 AND cell_id=253";
             this.productsBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.productsBindingSource_ListChanged);
             // 
             // ProductsDataSet
@@ -269,7 +262,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1297, 712);
+            this.tabPage2.Size = new System.Drawing.Size(1244, 670);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Поиск содержимого";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -448,7 +441,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(1297, 712);
+            this.tabPage6.Size = new System.Drawing.Size(1244, 670);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Дополнительно";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -838,13 +831,6 @@
             this.productidDataGridViewTextBoxColumn2.ValueMember = "id";
             this.productidDataGridViewTextBoxColumn2.Width = 300;
             // 
-            // productlistBindingSource1
-            // 
-            this.productlistBindingSource1.DataMember = "productlist";
-            this.productlistBindingSource1.DataSource = this.dbTiaraDataSet;
-            this.productlistBindingSource1.Sort = "name";
-            this.productlistBindingSource1.DataSourceChanged += new System.EventHandler(this.productlistBindingSource1_DataSourceChanged);
-            // 
             // productsBindingSource1
             // 
             this.productsBindingSource1.DataMember = "products";
@@ -861,6 +847,23 @@
             this.tabPage8.TabIndex = 2;
             this.tabPage8.Text = "Тесты";
             this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // tabStacker2
+            // 
+            this.tabStacker2.Controls.Add(this.stackerBox1);
+            this.tabStacker2.Location = new System.Drawing.Point(4, 22);
+            this.tabStacker2.Name = "tabStacker2";
+            this.tabStacker2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStacker2.Size = new System.Drawing.Size(1244, 670);
+            this.tabStacker2.TabIndex = 3;
+            this.tabStacker2.Text = "Штабелер 2";
+            this.tabStacker2.UseVisualStyleBackColor = true;
+            // 
+            // productlistBindingSource
+            // 
+            this.productlistBindingSource.DataMember = "productlist";
+            this.productlistBindingSource.DataSource = this.dbTiaraDataSet;
+            this.productlistBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.productlistBindingSource_ListChanged);
             // 
             // bsProductlist
             // 
@@ -928,23 +931,51 @@
             this.productsBindingSource2.DataMember = "products";
             this.productsBindingSource2.DataSource = this.dbTiaraDataSet;
             // 
+            // stackerBox1
+            // 
+            this.stackerBox1.AutoSize = true;
+            this.stackerBox1.BS_DriveErrors = this.driveerrorsBindingSource;
+            this.stackerBox1.BS_Errors = this.stackererrorsBindingSource;
+            this.stackerBox1.cellsize = 25;
+            this.stackerBox1.CellsNextPass = "0:12,253:11";
+            this.stackerBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stackerBox1.Floors = 12;
+            this.stackerBox1.Group = 1;
+            this.stackerBox1.InputCells = new int[] {
+        252};
+            this.stackerBox1.Location = new System.Drawing.Point(3, 3);
+            this.stackerBox1.Logpath = "events.log";
+            this.stackerBox1.Name = "stackerBox1";
+            this.stackerBox1.PASSWORD = "1234";
+            this.stackerBox1.PoddonCells = new int[0];
+            this.stackerBox1.Rows = 22;
+            this.stackerBox1.Servname = "serv1";
+            this.stackerBox1.Size = new System.Drawing.Size(1238, 664);
+            this.stackerBox1.StackerID = 2;
+            this.stackerBox1.TabIndex = 1;
+            this.stackerBox1.TableCoords = this.dbTiaraDataSet3.coords;
+            this.stackerBox1.TableProductlist = this.productlistBindingSource1;
+            this.stackerBox1.TableProducts = this.productsBindingSource;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1252, 634);
+            this.ClientSize = new System.Drawing.Size(1252, 696);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "АРМ ТИАРА";
+            this.Text = "АРМ КИНЕФ";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.tabStacker1.ResumeLayout(false);
+            this.tabStacker1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.driveerrorsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.stackererrorsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProductsDataSet)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -974,8 +1005,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.coordsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productsBindingSource1)).EndInit();
+            this.tabStacker2.ResumeLayout(false);
+            this.tabStacker2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.productlistBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsProductlist)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsPoddon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dbTiaraDataSet2)).EndInit();
@@ -990,7 +1023,7 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabStacker1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dgvSearch;
         private System.Windows.Forms.TextBox tbSearchStr;
@@ -1074,7 +1107,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn count;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewButtonColumn Column3;       
+        private System.Windows.Forms.DataGridViewButtonColumn Column3;
+        private System.Windows.Forms.TabPage tabStacker2;
+        private StackerLib.StackerBox stackerBox1;       
     }
 }
 
